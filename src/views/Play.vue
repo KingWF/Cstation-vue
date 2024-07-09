@@ -67,7 +67,8 @@
                   </el-col>
                   <el-col :span="2">
                     <span class="info">收藏</span>
-                    <img src="@/assets/like.png" alt="" width="20px">
+                    <img src="@/assets/follow.png" v-if="!isCollect" width="20px" @click="changeCollect">
+                    <img src="@/assets/follow-check.png" v-else width="20px" @click="changeCollect">
                   </el-col>
                   <el-col :span="2" :offset="16">
                     <el-button type="warning" plain size="small">举报</el-button>
@@ -102,21 +103,35 @@ export default{
       danmuList: null,
       isUp: false,
       isFollow: false,
+      isCollect:false,
       reviewList: null,
       key: null
     }
   },
   mounted(){
+
     // 发请求获取当前视频的信息
     this.$axios.get("video/findById/" + this.vid).then(res => {
       console.log(res.data)
       // 保存视频信息
       this.video = res.data.data
-      
+
+      console.log('vid', this.video.id)
+      console.log('fid',this.video.uid)
       // 查询用户的点赞
       this.$axios.get("like/findByVid/" + this.video.id).then(res => {
         console.log(res.data.data)
         this.isUp = res.data.data
+      })
+      // 查询用户的关注
+      this.$axios.get("follow/findByFid/" + this.video.uid).then(res => {
+        console.log( '关注情况',res.data.data)
+        this.isFollow = res.data.data
+      })
+      // 查询用户的收藏
+      this.$axios.get("collect/findByVid/" + this.video.id).then(res => {
+        console.log(res.data.data)
+        this.isCollect = res.data.data
       })
 
       // 查询当前视频的评论信息
@@ -155,6 +170,16 @@ export default{
     },
     changeFollow(){
       this.isFollow = !this.isFollow
+
+      this.$axios.get(`follow/update/${this.isFollow}/${this.video.uid}`).then(res => {
+
+      })
+    },
+    changeCollect(){
+      this.isCollect = !this.isCollect
+      this.$axios.get(`collect/update/${this.isCollect}/${this.video.id}`).then(res => {
+
+      })
     },
     commitReview(review){
       console.log(review)
