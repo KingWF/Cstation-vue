@@ -330,10 +330,10 @@ export default {
   justify-content: center;
   z-index: 999;
 }
-.user-rank{
+/* .user-rank{
   //display: flex;
   //justify-content: space-between;
-}
+} */
 .follows{
   display: flex;
   flex-direction: column;
