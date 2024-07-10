@@ -21,7 +21,7 @@
               <el-menu-item index="4">
                 <el-icon><Avatar/></el-icon>
                 我的粉丝</el-menu-item>
-              <el-menu-item index="5">
+              <el-menu-item index="5" @click="$router.push('/upPersonal/myMessage')">
                 <el-icon><Setting/></el-icon>
                 个人信息</el-menu-item>
             </el-menu>
