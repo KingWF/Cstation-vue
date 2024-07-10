@@ -51,7 +51,7 @@
 
         <el-table-column label="操作" align="center" #default="scoped">
           <el-button type="danger" v-if="scoped.row.state != 'video_lock'" @click="lock(scoped)">锁定</el-button>
-          <el-button type="success" v-if="scoped.row.state != 'video_pass'">审核</el-button>
+          <el-button type="success" v-if="scoped.row.state != 'video_pass'" @click="pass(scoped)">审核</el-button>
         </el-table-column>
       </el-table>
     </el-row>
@@ -134,6 +134,19 @@ export default{
           video.state = 'video_lock'
           //
           this.$message.success("锁定成功")
+        }
+      })
+    },
+    pass(scoped){
+      console.log(scoped)
+      // 引用传递
+      let video = scoped.row
+      this.$axios.get("video/pass/" + video.id).then(res => {
+        if(res.data.code == 200){
+          // 更新页面
+          video.state = 'video_pass'
+          //
+          this.$message.success("审核成功")
         }
       })
     },
