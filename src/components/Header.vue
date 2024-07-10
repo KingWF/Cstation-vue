@@ -1,5 +1,8 @@
 <template>
-  <div style="background-color: black;" class="base">
+  <div class="image-container">
+    <img :src="imgSrc" alt="Background Image">
+  </div>
+  <div  class="base">
     <!-- 菜单、输入框、头像 -->
     <!-- 行 :gutter="20" 指定列之间的间距  单位px -->
     <el-row :gutter="20">
@@ -19,105 +22,129 @@
       </el-col>
 
       <!-- 搜索输入框 -->
-      <el-col :span="5">
+      <el-col :span="5" style="display: flex;justify-content: center;margin-top: 5px">
         <!-- 输入框 -->
-        <el-input placeholder="请输入搜索内容"></el-input>
+        <el-input
+            v-model="searchKey"
+            style="width: 400px"
+            placeholder="输入搜索内容~"
+            :prefix-icon="Search"
+            @keyup.enter="onSearch"
+        />
       </el-col>
 
       <!-- 头像、个人、投稿 -->
       <el-col :span="9">
-        <ul class="menu" >
-          <li @click="checkState" >
-              <el-popover
-                  @before-leave="hideInfo"
-                  :width="400"
-                  popper-style="position:absolute;z-index:1;margin-top: 70px;box-shadow: rgb(14 18 22 / 35%) 0px 10px 38px -10px, rgb(14 18 22 / 20%) 0px 10px 20px -15px; padding: 20px;"
-              >
-                <template #reference>
-                  <el-avatar :size="40" @mouseenter="bigAvater" :src="avatar" class="avatar" :style="avatarStyle"/>
-                </template>
-                <template #default>
-                  <el-row>
-                    <el-col :span="24"><div class="grid-content ep-bg-purple-dark" /></el-col>
-                  </el-row>
-                  <el-row>
-                    <el-col :span="12"><div class="grid-content ep-bg-purple" /></el-col>
-                    <el-col :span="12"><div class="grid-content ep-bg-purple-light" /></el-col>
-                  </el-row>
-                  <el-row class="user-rank" >
-                    <el-col :span="3" >
-                      Lv{{rank_star}}
-                    </el-col>
-                    <el-col :span="21" style="margin-top: 2px">
-                    <el-progress  :percentage="percentage" :color="customColor" :format="rankFormat" />
-                    </el-col>
-                  </el-row>
-                  <el-row>
-                    <el-col :span="24">
-                      <div style="color: #a8a8a8;font-size: 15px;margin-top: 10px">当前成长值为 {{percentage}}, 还需 {{100-percentage}} 贡献值升级到 Lv{{rank_star+1}}</div>
-                    </el-col>
-                  </el-row>
+<!--        头像和个人信息显示-->
+        <div @click="checkState" >
+          <el-popover
+              @hide="hideInfo"
+              :width="400"
+              popper-style="margin-top: 80px; padding: 20px;"
+          >
+            <template #reference>
+              <el-avatar :size="50" @mouseenter="bigAvater" :src="avatar" class="avatar" :style="avatarStyle"/>
+            </template>
+            <template #default>
+              <el-row :gutter="30">
+                <el-col :span="24"  style="display: flex;justify-content: center">
+                <div style="font-size: 30px;font-weight: bold">{{user.account}}</div>
+                </el-col>
+              </el-row>
+              <el-row :gutter="30" justify="center">
+                <div style="margin-right: 5px"><span style="color: #a8a8a8">硬币</span>: 475  </div>
+                <div><span style="color: #a8a8a8">B币</span>: 5</div>
+              </el-row>
+              <el-row class="user-rank" >
+                <el-col :span="3" >
+                  Lv{{rank_star}}
+                </el-col>
+                <el-col :span="21" style="margin-top: 2px">
+                  <el-progress  :percentage="percentage" :color="customColor" :format="rankFormat" />
+                </el-col>
+              </el-row>
+              <el-row>
+                <el-col :span="24">
+                  <div style="color: #a8a8a8;font-size: 15px;margin-top: 10px">当前成长值为 {{percentage}}, 还需 {{100-percentage}} 贡献值升级到 Lv{{rank_star+1}}</div>
+                </el-col>
+              </el-row>
 
-                  <el-row style="margin-top: 10px">
-                    <!--关注-->
-                    <el-col :span="8" class="follows" >
-                      <el-row>
-                        {{followNum}}
-                      </el-row>
-                      <el-row>
-                          关注
-                      </el-row>
-                    </el-col>
-                    <!--粉丝-->
-                    <el-col :span="8" class="follows" >
-                      <el-row>
-                        {{fansNum}}
-                      </el-row>
-                      <el-row>
-                        粉丝
-                      </el-row>
-                    </el-col>
-                    <!--动态-->
-                    <el-col :span="8" class="follows" >
-                      <el-row>
-                        {{dynamicNum}}
-                      </el-row>
-                      <el-row>
-                        动态
-                      </el-row>
-                    </el-col>
+              <el-row style="margin-top: 10px;margin-bottom: 30px">
+                <!--关注-->
+                <el-col :span="8" class="follows" >
+                  <el-row style="font-size: 25px;font-weight: 400;color: #000000">
+                    {{followNum}}
                   </el-row>
-                </template>
-              </el-popover>
-          </li>
-          <li style="margin-left: 80px;margin-right: 10px;">
-            <el-icon color="white">
-              <Avatar />
-            </el-icon>
+                  <el-row >
+                    关注
+                  </el-row>
+                </el-col>
+                <!--粉丝-->
+                <el-col :span="8" class="follows" >
+                  <el-row style="font-size: 25px;font-weight: 400;color: #000000">
+                    {{fansNum}}
+                  </el-row>
+                  <el-row>
+                    粉丝
+                  </el-row>
+                </el-col>
+                <!--动态-->
+                <el-col :span="8" class="follows" >
+                  <el-row style="font-size: 25px;font-weight: 400;color: #000000">
+                    {{dynamicNum}}
+                  </el-row>
+                  <el-row>
+                    动态
+                  </el-row>
+                </el-col>
+              </el-row>
+<!--              个人中心-->
+              <el-row style="margin:15px 0 15px 0">
+                <el-col :span="4"><el-icon size="25"><User /></el-icon></el-col>
+                <el-col :span="18" style="font-size: 18px">个人中心</el-col>
+                <el-col :span="2"><el-icon size="20"><ArrowRight /></el-icon></el-col>
+              </el-row>
+<!--              投稿管理-->
+              <el-row style="margin:15px 0 15px 0">
+                <el-col :span="4"><el-icon size="25"><VideoPlay /></el-icon></el-col>
+                <el-col :span="18" style="font-size: 18px">投稿管理</el-col>
+                <el-col :span="2"><el-icon size="20"><ArrowRight /></el-icon></el-col>
+              </el-row>
+<!--              推荐服务-->
+              <el-row style="margin:15px 0 15px 0">
+                <el-col :span="4"><el-icon size="25"><Star /></el-icon></el-col>
+                <el-col :span="18" style="font-size: 18px">推荐服务</el-col>
+                <el-col :span="2"><el-icon size="20"><ArrowRight /></el-icon></el-col>
+              </el-row>
+              <el-divider />
+<!--              退出登录-->
+              <el-row style="margin:15px 0 15px 0">
+                <el-col :span="4"><el-icon size="25"><Remove /></el-icon></el-col>
+                <el-col :span="18" style="font-size: 18px">退出登录</el-col>
+                <el-col :span="2"><el-icon size="20"><ArrowRight /></el-icon></el-col>
+              </el-row>
+            </template>
+          </el-popover>
+        </div>
+        <ul class="menu2" >
+          <li class="meau-right" >
+            <el-icon color="white" size="25px"><Help /></el-icon>
             <div style="color: white;">大会员</div>
           </li>
-          <li style="margin-left: 10px;margin-right: 10px;">
-            <el-icon color="white">
-              <Avatar />
-            </el-icon>
+          <li class="meau-right">
+            <el-icon color="white" size="25px"><ChatDotRound /></el-icon>
             <div style="color: white;">消息</div>
           </li>
-          <li style="margin-left: 10px;margin-right: 10px;">
-            <el-icon color="white">
-              <Avatar />
-            </el-icon>
+          <li class="meau-right">
+            <el-icon color="white" size="25px"><View /></el-icon>
             <div style="color: white;">动态</div>
           </li>
-          <li style="margin-left: 10px;margin-right: 10px;">
-            <el-icon color="white">
-              <Avatar />
-            </el-icon>
+          <li class="meau-right">
+            <el-icon color="white" size="25px"><Clock /></el-icon>
             <div style="color: white;">历史</div>
           </li>
-          <li style="margin-left: 10px;margin-right: 10px;">
-            <el-icon color="white">
-              <Avatar />
-            </el-icon>
+          <li class="meau-right">
+            <el-icon color="white" size="25px"><User /></el-icon>
             <div style="color: white;">创作中心</div>
           </li>
           <li style="margin-left: 10px;margin-right: 10px;">
@@ -139,14 +166,14 @@
       </el-col>
     </el-row>
 
-    <!-- logo  :offset="20"  设置偏移量-->
-    <el-row>
-      <el-col :span="4">
-        <img src="@/assets/logo.png"
-             alt=""
-             style="width: 100%; height: auto;">
-      </el-col>
-    </el-row>
+<!--    &lt;!&ndash; logo  :offset="20"  设置偏移量&ndash;&gt;-->
+<!--    <el-row>-->
+<!--      <el-col :span="4">-->
+<!--        <img src="@/assets/logo.png"-->
+<!--             alt=""-->
+<!--             style="width: 100%; height: auto;">-->
+<!--      </el-col>-->
+<!--    </el-row>-->
 
     <!-- 登录、注册对话框 -->
     <el-dialog
@@ -164,15 +191,22 @@
       </div>
     </el-dialog>
   </div>
+  <div class="logo">
+    <img src="@/assets/logo.png"
+         alt="">
+  </div>
 </template>
 <script>
+
+import {Search} from "@element-plus/icons-vue";
+import axios from "axios";
 
 export default {
   data(){
     return{
       dialogVisible : false, // 默认情况下对话框隐藏
       user:{
-        account: "",
+        account: "未登录",
         password: ""
       },
       avatar: "https://cdjava96.oss-cn-chengdu.aliyuncs.com/login.png",
@@ -186,6 +220,8 @@ export default {
       followNum:44,
       fansNum:41,
       dynamicNum:40,
+      imgSrc:'https://kingwangf.oss-cn-chengdu.aliyuncs.com/233dcdceae41a91bf1ec0268b48ad3dd8e6340ac.jpg%401256w_708h_%21web-article-pic.jpg',
+      searchKey:''
     }
   },
   mounted(){
@@ -193,12 +229,16 @@ export default {
     let user = window.localStorage.getItem("user")
     if(user){
       // JSON.parse 将字符串转换成对象
+      this.user.account=JSON.parse(user).account
       this.avatar = JSON.parse(user).avatar
       // 已登录
       this.isLogin = true
     }
   },
   computed: {
+    Search() {
+      return Search
+    },
     avatarStyle() {
       // 根据 isShowInfo 的值返回不同的样式对象
       return this.isShowInfo ? { transform: 'translateY(40px) scale(2.7)'} : {};
@@ -211,9 +251,11 @@ export default {
      },
     // 鼠标放在头像上面
     bigAvater(){
+      console.log('showbig')
       this.isShowInfo = true
     },
     hideInfo(){
+      console.log('small')
       this.isShowInfo = false
     },
     login(){
@@ -284,18 +326,54 @@ export default {
       this.avatar = "https://cdjava96.oss-cn-chengdu.aliyuncs.com/login.png"
       // 登出之后跳转到首页
       this.$router.push("/")
-    }
+    },
+    // 搜索视频
+    onSearch() {
+      console.log('搜索:', this.searchKey);
+      this.$router.push({ path: '/search', query: { searchkey: this.searchKey } });
+    },
   }
 }
 </script>
 <style scoped>
-.base{
+.image-container{
   position: relative;
-  z-index: 1;
+  img{
+    width: 100%;
+    height: 200px;
+  }
+}
+.base{
+  padding-top: 10px;
+  //background: rgba(96, 86, 86, 0.76);
+  position: absolute;
+  z-index: 999;
+  width: 100%;
+  top: 0;
+}
+.logo{
+  margin-left: 20px;
+  position: absolute;
+  top: 90px;
+  img{
+    width: 400px;
+    height: 100px;
+  }
 }
 .menu {
+  display: flex;
   list-style-type: none;
+  justify-content: space-around;
   margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+.menu2 {
+
+  display: flex;
+  list-style-type: none;
+  justify-content: space-around;
+  margin: 0 0 0 40px;
   padding: 0;
   overflow: hidden;
 }
@@ -305,15 +383,17 @@ export default {
 
 .menu li a {
   display: block;
-  color: white;
+  color: #ffffff;
+  font-size: 20px;
   text-align: center;
   padding: 10px 10px;
   text-decoration: none;
+  transition: all 0.3s ease; /* 添加过渡效果 */
 }
 
 /* 鼠标悬停时的样式 */
 .menu li a:hover {
-  font-size: 14px; /* 增加字体大小 */
+  transform:  scale(1.5);
 }
 
 /* 清除浮动 */
@@ -322,6 +402,13 @@ export default {
   display: table;
   clear: both;
 }
+.meau-right{
+  margin-left: 20px;
+  margin-right: 20px;
+  display:flex;flex-direction:column;
+  align-items: center;
+}
+
 /* 头像变化*/
 .avatar{
   position: absolute;

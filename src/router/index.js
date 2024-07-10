@@ -17,6 +17,12 @@ const router = createRouter({
       component: () => import('../views/Play.vue')  // 在访问页面时才导入
     },
     {
+      path: '/search',  // 动态路由：可以用来传参  id：变量名
+      name: 'search',
+      // 路由懒加载：需要时再加载，不是提前就加载好
+      component: () => import('../views/SearchVideo.vue')  // 在访问页面时才导入
+    },
+    {
       path: '/chat',  // 动态路由：可以用来传参  id：变量名
       name: 'chat',
       // 路由懒加载：需要时再加载，不是提前就加载好
