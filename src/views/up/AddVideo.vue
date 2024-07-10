@@ -1,8 +1,11 @@
 <template>
-  <div>
+  <div v-loading="isLoading"
+  element-loading-text="正在上传视频，请不要刷新页面..."
+  element-loading-background="rgba(122, 122, 122)"
+  >
     <el-row>
       <el-col :span="12">
-        <el-input placeholder="请输入视频名称" v-model="title"></el-input>
+        <el-input placeholder="请输入视频名称" v-model="title"style="margin-bottom:20px;"></el-input>
 
         <!-- 选封面 -->
         <ImageChange @changeFile="coverChange"></ImageChange>
@@ -14,7 +17,7 @@
         <el-select
           v-model="cids"
           placeholder="请选择视频分类，可以是多种"
-          style="width: 240px"
+          style="width: 240px;margin-top: 20px;"
           multiple
           @change="changeCategory"
         >
@@ -28,7 +31,7 @@
       </el-col>
     </el-row>
     <el-row>
-      <el-button type="success" @click="upload">上传视频</el-button>
+      <el-button style="margin-top: 10px;" type="success" @click="upload">上传视频</el-button>
     </el-row>
   </div>
 </template>
@@ -42,7 +45,8 @@ export default{
       categoryList:[],
       title: "",
       cover: null,
-      video: null
+      video: null,
+      isLoading: false
     }
   },
   components:{
@@ -69,7 +73,7 @@ export default{
       data.append("cover", this.cover)
       data.append("video", this.video)
       data.append("cids", this.cids)
-
+      this.isLoading = true
       // 发请求提交数据
       this.$axios.post("video/add", data, {
         headers:{
@@ -79,9 +83,13 @@ export default{
         console.log(res)
         if(res.data.code == 200){
           this.$message.success("添加成功!")
+          this.isLoading = false
           // 回到视频管理页
           this.$router.push("/upPersonal/videoManage")
         }
+      }).catch(err => {
+        this.$message.error("添加失败,网络错误！")
+        this.isLoading = false
       })
 
     },
