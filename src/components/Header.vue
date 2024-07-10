@@ -222,7 +222,7 @@ export default {
       followNum:44,
       fansNum:41,
       dynamicNum:40,
-      imgSrc:'https://kingwangf.oss-cn-chengdu.aliyuncs.com/233dcdceae41a91bf1ec0268b48ad3dd8e6340ac.jpg%401256w_708h_%21web-article-pic.jpg',
+      imgSrc:'/src/assets/static/233dcdceae41a91bf1ec0268b48ad3dd8e6340ac.jpg@1256w_708h_!web-article-pic.jpg',
       searchKey:''
     }
   },
