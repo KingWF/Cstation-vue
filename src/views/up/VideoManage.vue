@@ -3,8 +3,14 @@
     <!-- 搜索、添加 -->
     <el-row>
       <el-col :span="8">
-        <el-input placeholder="视频标题" style="width: 80%"></el-input>
-        <el-button type="success">搜索</el-button>
+        <el-input
+          @change.passive="searchVideo"
+          placeholder="视频标题"
+          clearable
+          v-model="searchTitle"
+          style="width: 80%"
+        ></el-input>
+        <el-button @click="searchVideo" type="primary" style="margin-left: 10px">搜索</el-button>
       </el-col>
       <el-col :span="1" :offset="15">
         <el-button type="primary" @click="$router.push('/upPersonal/addVideo')"
@@ -78,9 +84,15 @@
         </el-table-column>
 
         <el-table-column label="操作" align="center" #default="scoped">
-          <el-button type="primary" @click = "$router.push('/upPersonal/viewVideo/'+scoped.row.id)">查看</el-button>
-          <el-button type="warning" v-if="scoped.row.state != 'video_lock'"
-            @click="$router.push('/upPersonal/editVideo/'+scoped.row.id)"
+          <el-button
+            type="primary"
+            @click="$router.push('/upPersonal/viewVideo/' + scoped.row.id)"
+            >查看</el-button
+          >
+          <el-button
+            type="warning"
+            v-if="scoped.row.state != 'video_lock'"
+            @click="$router.push('/upPersonal/editVideo/' + scoped.row.id)"
             >编辑</el-button
           >
           <el-button
@@ -112,6 +124,7 @@ export default {
       size: 5, // 每一页多少条数据
       total: 0, // 总条数
       videoList: [], // 当前页的视频列表、数据
+      searchTitle: "", // 搜索的标题
     };
   },
   mounted() {
@@ -121,8 +134,11 @@ export default {
   methods: {
     pageChange(page) {
       this.page = page;
-      //
-      this.getData();
+      if (this.searchTitle !== "") {
+        this.searchVideo();
+      } else {
+        this.getData();
+      }
     },
     getData() {
       // video/findByUid/1/5    video/findByUid?page=1&size=5&account=xxx
@@ -152,7 +168,7 @@ export default {
      * @returns {any}
      */
     deleteVideo(video) {
-      this.$confirm(`确定要删除【${video.title}】吗？`,{
+      this.$confirm(`确定要删除【${video.title}】吗？`, {
         title: "提示",
         confirmButtonText: "确定",
         cancelButtonText: "取消",
@@ -167,6 +183,31 @@ export default {
         })
         .catch(() => {
           this.$message.info("已取消删除");
+        });
+    },
+    /**
+     * 搜索视频
+     */
+    searchVideo() {
+      if (this.searchTitle === "") {
+        this.getData();
+        return;
+      }
+      this.$axios
+        .get(`video/findByTitle/${this.searchTitle}/${this.page}/${this.size}`)
+        .then((res) => {
+          // 响应对象：里面包含了状态、数据、响应头
+          console.log(res);
+          // res.data属性：存放后端返回的数据  ResponseResult 对象
+          console.log(res.data);
+          // res.data.data：分页信息 ResPage
+          console.log(res.data.data);
+          // 获取到了分页信息对象
+          let resPage = res.data.data;
+          // 获取总条数
+          this.total = resPage.total;
+          // 获取当前页数据
+          this.videoList = resPage.data;
         });
     },
   },
