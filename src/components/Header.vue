@@ -1,8 +1,12 @@
 <template>
-  <div class="image-container">
+  <div class="image-container" v-if="hideLogo">
     <img :src="imgSrc" alt="Background Image">
+    <div class="logo">
+      <img src="@/assets/logo.png"
+           alt="">
+    </div>
   </div>
-  <div  class="base">
+  <div  class="base" :style="{background: topColor}">
     <!-- 菜单、输入框、头像 -->
     <!-- 行 :gutter="20" 指定列之间的间距  单位px -->
     <el-row :gutter="20">
@@ -22,14 +26,15 @@
       </el-col>
 
       <!-- 搜索输入框 -->
-      <el-col :span="5" style="display: flex;justify-content: center;margin-top: 5px">
+      <el-col :span="5" style="display: flex;justify-content: center;margin-top: 5px" >
         <!-- 输入框 -->
         <el-input
             v-model="searchKey"
             style="width: 400px"
             placeholder="输入搜索内容~"
             :prefix-icon="Search"
-            @keyup.enter="onSearch"
+            @keyup.enter="onSearch()"
+            :disabled="enableSearch"
         />
       </el-col>
 
@@ -191,10 +196,7 @@
       </div>
     </el-dialog>
   </div>
-  <div class="logo">
-    <img src="@/assets/logo.png"
-         alt="">
-  </div>
+
 </template>
 <script>
 
@@ -234,6 +236,10 @@ export default {
       // 已登录
       this.isLogin = true
     }
+    console.log('keepSearchKey', this.keepSearchKey)
+    if(this.keepSearchKey!==''){
+      this.searchKey = this.keepSearchKey
+    }
   },
   computed: {
     Search() {
@@ -244,7 +250,41 @@ export default {
       return this.isShowInfo ? { transform: 'translateY(40px) scale(2.7)'} : {};
     },
   },
+  props:{
+    hideLogo: {
+      type: Boolean,
+      default: true // 默认值为 false
+    },
+    topColor: {
+      type: String,
+      default: 'rgba(255,255,255,0)' // 默认值同样为 false
+    },
+    keepSearchKey:{
+      type: String,
+      default: ''
+    },
+    enableSearch:{
+      type: Boolean,
+      default: false
+    }
+
+  },
+  // watch: {
+  //   '$route.query.searchkey': {
+  //     immediate: true,
+  //     handler(newVal) {
+  //       if (newVal) {
+  //         console.log('新参数',newVal)
+  //         this.$router.push({ path: '/search', query: { searchkey: newVal } });
+  //       }
+  //     }
+  //   }
+  // },
   methods:{
+    // 设置搜索关键字
+    setSearchKey(key){
+      this.searchKey = key
+    },
     // 等级样式
     rankFormat(percentage) {
        return 'Lv'+(this.rank_star+1)
@@ -330,6 +370,8 @@ export default {
     // 搜索视频
     onSearch() {
       console.log('搜索:', this.searchKey);
+      // 强制刷新当前页面
+      // location.reload(true);
       this.$router.push({ path: '/search', query: { searchkey: this.searchKey } });
     },
   }
@@ -345,11 +387,12 @@ export default {
 }
 .base{
   padding-top: 10px;
-  //background: rgba(96, 86, 86, 0.76);
+  /* //background: rgba(96, 86, 86, 0.76); */
   position: absolute;
   z-index: 999;
   width: 100%;
   top: 0;
+  height: 60px;
 }
 .logo{
   margin-left: 20px;

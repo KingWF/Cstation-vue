@@ -42,11 +42,13 @@ export default {
 .item-box {
   width: 100%;
   position: relative;
+
 }
 .cover {
   width: 100%;
   height: auto;
   border: 1px solid gainsboro;
+  border-radius: 15px;
 }
 .play-icon {
   position: absolute;

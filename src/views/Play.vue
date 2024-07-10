@@ -71,7 +71,7 @@
                     <img src="@/assets/follow-check.png" v-else width="20px" @click="changeCollect">
                   </el-col>
                   <el-col :span="2" :offset="16">
-                    <el-button type="warning" plain size="small">举报</el-button>
+                    <el-button type="warning" plain size="small" @click="reportVisible = true">举报</el-button>
                   </el-col>
                 </el-row>
 
@@ -85,6 +85,26 @@
         </el-row>
       </el-col>
     </el-row>
+    <el-dialog
+        v-model="reportVisible"
+        title="举报"
+        width="500"
+    >
+      <el-checkbox-group v-model="checkList" v-for="(item,index) in reportList">
+        <el-checkbox :label="item" />
+<!--        <el-checkbox label="Option B" />-->
+<!--        <el-checkbox label="Option C"  />-->
+<!--        <el-checkbox label="Option D"   />-->
+      </el-checkbox-group>
+      <template #footer>
+        <div class="dialog-footer">
+          <el-button @click="reportVisible = false">取消</el-button>
+          <el-button type="primary" @click="confirmReport">
+            确定
+          </el-button>
+        </div>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
@@ -94,6 +114,8 @@ import MyVideo from '../components/MyVideo.vue'
 import Header from '../components/Header.vue'
 import Editor from '../components/editor/Editor.vue'
 import ReviewItem from '../components/ReviewItem.vue'
+import {ElMessageBox} from "element-plus";
+import {MessageBox} from "@element-plus/icons-vue";
 
 export default{
   data(){
@@ -105,7 +127,10 @@ export default{
       isFollow: false,
       isCollect:false,
       reviewList: null,
-      key: null
+      key: null,
+      reportVisible: false,
+      checkList:[],
+      reportList:['违法未尽','赌博诈骗','侵权申述']
     }
   },
   mounted(){
@@ -161,6 +186,17 @@ export default{
     ReviewItem
   },
   methods:{
+    // 提交举报
+    confirmReport(){
+      console.log('选择的内容',this.checkList)
+      this.$axios.get("report/add/" + this.video.id).then(res => {
+        if(res.data.code == 200){
+          this.$message.success("举报成功")
+        }
+      })
+      this.reportVisible = false
+    },
+    // 点赞
     changeUp(){
       this.isUp = !this.isUp
       // 发请求点赞、取消点赞
