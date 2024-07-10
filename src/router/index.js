@@ -41,6 +41,11 @@ const router = createRouter({
           path: 'addVideo',
           name: 'addVideo',
           component: () => import('../views/up/AddVideo.vue')
+        },
+        {
+          path:'editVideo/:vid',
+          name:'editVideo',
+          component:()=>import('@/views/up/EditVideo.vue')
         }
       ]  
     },
