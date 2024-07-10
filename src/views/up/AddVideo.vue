@@ -67,6 +67,22 @@ export default{
       this.cids = cids
     },
     upload(){
+      if(this.title===""){
+        this.$message.error("请输入视频名称！")
+        return
+      }
+      if(this.cover==null){
+        this.$message.error("请选择封面！")
+        return
+      }
+      if(this.video==null){
+        this.$message.error("请选择视频！")
+        return
+      }
+      if(this.cids.length===0){
+        this.$message.error("请选择视频分类！")
+        return
+      }
       // 得到标题、图片、视频、分类
       let data = new FormData()
       data.append("title", this.title)

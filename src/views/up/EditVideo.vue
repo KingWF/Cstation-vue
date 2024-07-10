@@ -127,6 +127,7 @@ export default {
       categoryList: [],
       title: "",
       cover: null,
+      coverFile: null,
       vid: this.$route.params.vid,
       isGetVideoInfo: false,
       fileInput: null,
@@ -208,6 +209,7 @@ export default {
      */
     coverChange(event) {
       const file = event.target.files[0];
+      this.coverFile = file;
       this.cover = URL.createObjectURL(file);
     },
     saveVideo() {
@@ -222,7 +224,7 @@ export default {
       if (this.video.cover === this.cover) {
         url = "video/updateVideoNoCover";
       } else {
-        formData.append("cover", this.cover);
+        formData.append("cover", this.coverFile);
       }
 
       this.$axios
