@@ -141,9 +141,7 @@ export default {
       if (!this.video) {
         return false;
       }
-      if (!this.cids.length > 0) {
-        return false;
-      }
+
       // 判断是否有修改
       if (
         this.title === this.video.title &&
@@ -215,12 +213,20 @@ export default {
     saveVideo() {
       // 更新视频信息
       const formData = new FormData();
-      this.video.title = this.title;
-      formData.append("video", this.video);
-      formData.append("cover", this.cover);
+      formData.append("id", this.video.id);
+      formData.append("title", this.title);
+      formData.append("uid", this.video.uid);
       formData.append("cids", this.cids);
+      formData.append("coverUrl", this.video.cover);
+      let url = "video/updateVideo";
+      if (this.video.cover === this.cover) {
+        url = "video/updateVideoNoCover";
+      } else {
+        formData.append("cover", this.cover);
+      }
+
       this.$axios
-        .post("video/updateVideo", formData, {
+        .post(url, formData, {
           headers: {
             "Content-Type": "multipart/form-data",
           },
