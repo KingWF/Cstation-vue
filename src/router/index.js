@@ -49,9 +49,9 @@ const router = createRouter({
           component: () => import('../views/up/AddVideo.vue')
         },
         {
-          path:'editVideo/:vid',
-          name:'editVideo',
-          component:()=>import('@/views/up/EditVideo.vue')
+          path:'viewVideo/:vid',
+          name:'viewVideo',
+          component:()=>import('@/views/up/ViewVideo.vue')
         }
       ]  
     },
@@ -66,6 +66,11 @@ const router = createRouter({
           name: 'adminVideoManage',
           component: () => import('../views/admin/VideoManage.vue')
         },
+        {
+          path: 'reviewManage',
+          name: 'adminReviewManage',
+          component: () => import('../views/admin/ReviewManage.vue')
+        }
       ] 
     }
   ]

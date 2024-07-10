@@ -1,101 +1,199 @@
 <template>
     <div>
+      <!-- 面包屑 -->
       <el-row>
-        <el-col :span="12">
-          <el-input placeholder="请输入视频名称" v-model="title"></el-input>
-  
-          <!-- 选封面 -->
-          <ImageChange @changeFile="coverChange"></ImageChange>
+        <el-col>
+          <div class="breadcrumb">
+            <el-icon class="breadcrumb-icon" @click="$router.go(-1)" size="20"><ArrowLeft /></el-icon>
+            <el-breadcrumb separator="/">
+              <el-breadcrumb-item :to="{ path: '/upPersonal' }">
+                Up主页
+              </el-breadcrumb-item>
+              <el-breadcrumb-item :to="{ path: '/upPersonal/videoManage' }">
+                视频编辑
+              </el-breadcrumb-item>
+              <el-breadcrumb-item>
+                {{ title }}
+              </el-breadcrumb-item>
+            </el-breadcrumb>
+          </div>
           
-          <!-- 选视频 -->
-          <VideoChange @changeFile="videoChange"></VideoChange>
-  
-          <!-- 下拉菜单 -->
-          <el-select
-            v-model="cids"
-            placeholder="请选择视频分类，可以是多种"
-            style="width: 240px"
-            multiple
-            @change="changeCategory"
-          >
-            <el-option
-              v-for="item in categoryList"
-              :key="item.id"
-              :label="item.name"
-              :value="item.id"
-            />
-          </el-select>
         </el-col>
       </el-row>
+      <!-- 视频信息 -->
       <el-row>
-        <el-button type="success" @click="upload">上传视频</el-button>
+        <el-col :span="16" style="margin-left: 20px">
+          <!-- 视频标题 -->
+          <el-row>
+            <el-col>
+              <div class="title">
+                <el-text class="title-span">标题：</el-text>
+                <el-input v-model="title" placeholder="请输入视频标题"></el-input>
+              </div>
+            </el-col>
+          </el-row>
+          <!-- 下拉菜单 -->
+          <el-row>
+            <el-col>
+              <div class="category">
+                <el-text>分类：</el-text>
+                <template
+                  v-if="categoryList.length > 0"
+                  v-for="(item, index) in categoryList"
+                  :key="item.id"
+                >
+                  <el-tag v-if="cids.includes(item.id)" type="success">{{
+                    item.name
+                  }}</el-tag>
+                </template>
+              </div>
+            </el-col>
+          </el-row>
+          <!-- 上传时间 -->
+          <el-row v-if="isGetVideoInfo">
+            <el-col>
+              <div class="title">
+                <el-text class="title-span">上传时间：</el-text>
+                <el-text style="font-weight: bold">
+                  {{ video.uptime }}
+                </el-text>
+              </div>
+            </el-col>
+          </el-row>
+  
+          <!-- 播放量 -->
+          <el-row v-if="isGetVideoInfo">
+            <el-col>
+              <div class="title">
+                <el-text class="title-span">播放量：</el-text>
+                <el-text style="font-weight: bold">
+                  {{ video.playnums }}
+                </el-text>
+              </div>
+            </el-col>
+          </el-row>
+          <!-- 视频状态 -->
+          <el-row v-if="isGetVideoInfo">
+            <el-col>
+              <div class="title">
+                <el-text class="title-span">视频状态：</el-text>
+                <el-tag v-if="video.state === 'video_pass'" type="success"
+                  >正常</el-tag
+                >
+                <el-tag v-if="video.state === 'video_commit'" type="pramry"
+                  >审核中</el-tag
+                >
+                <el-tag v-if="video.state === 'video_lock'" type="info"
+                  >锁定中</el-tag
+                >
+                <el-tag v-if="video.state === 'video_reject'" type="error"
+                  >审核未通过</el-tag
+                >
+              </div>
+            </el-col>
+          </el-row>
+          <!-- 视频播放 -->
+          <el-row v-if="isGetVideoInfo">
+            <el-col :span="12" style="margin-top: 20px">
+              <UpViewVideo :video="video"></UpViewVideo>
+            </el-col>
+          </el-row>
+        </el-col>
       </el-row>
     </div>
   </template>
   <script>
-  import ImageChange from '../../components/ImageChange.vue'
-  import VideoChange from '../../components/VideoChange.vue'
-  export default{
-    data(){
-      return{
-        cids: [],//分类id的数组，里面保存用户选择的分类id,
-        categoryList:[],
+  import UpViewVideo from "@/components/UpViewVideo.vue";
+  export default {
+    data() {
+      return {
+        cids: [], //分类id的数组，里面保存用户选择的分类id,
+        categoryList: [],
         title: "",
         cover: null,
         video: null,
-        vid:this.$route.params.vid
-      }
+        vid: this.$route.params.vid,
+        isGetVideoInfo: false,
+      };
     },
-    components:{
-      ImageChange,
-      VideoChange
+    components: {
+      UpViewVideo,
     },
-    mounted(){
-        console.log(this.vid);
-      // 请求视频的分类信息
-      this.$axios.get("category/all").then(res => {
-        console.log(res.data)
-        this.categoryList = res.data.data
-      })
+    mounted() {
+      this.init();
     },
-    methods:{
-      // 参数是被选中的分类id数组
-      changeCategory(cids){
-        // 记录选中了哪些
-        this.cids = cids
+    methods: {
+      init() {
+        // 获取视频数据和分类数据
+        this.getData();
       },
-      upload(){
-        // 得到标题、图片、视频、分类
-        let data = new FormData()
-        data.append("title", this.title)
-        data.append("cover", this.cover)
-        data.append("video", this.video)
-        data.append("cids", this.cids)
-  
-        // 发请求提交数据
-        this.$axios.post("video/add", data, {
-          headers:{
-            'Content-Type': 'multipart/form-data'
-          }
-        }).then(res => {
-          console.log(res)
-          if(res.data.code == 200){
-            this.$message.success("添加成功!")
-            // 回到视频管理页
-            this.$router.push("/upPersonal/videoManage")
-          }
-        })
-  
+      /**
+       * 获取视频信息
+       * @author ZSCaiGou
+       * @date 2024-07-10
+       */
+      getData() {
+        // 请求视频的分类选项
+        this.$axios
+          .get("category/all")
+          .then((res) => {
+            this.categoryList = res.data.data;
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+        // 请求视频信息
+        this.$axios
+          .get(`video/getUpVideoInfoByVid/${this.vid}`)
+          .then((res) => {
+            const resData = res.data;
+            if (resData.code === 200) {
+              this.video = resData.data;
+              this.cover = this.video.cover;
+              this.title = this.video.title;
+              this.isGetVideoInfo = true;
+            }
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+        // 获取视频分类信息
+        this.$axios
+          .get(`video/getVideoCategoryByVid/${this.vid}`)
+          .then((res) => {
+            const resData = res.data;
+            if (resData.code === 200) {
+              console.log(resData.data);
+              this.cids = resData.data;
+            }
+          })
+          .catch((err) => {
+            console.log(err);
+          });
       },
-      coverChange(cover){
-        this.cover = cover
-      },
-      videoChange(video){
-        this.video = video
-      }
-    }
-  }
+    },
+  };
   </script>
   <style scoped>
-  
+  .title {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  }
+  .category {
+    margin-top: 20px;
+  }
+  .breadcrumb{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  }
+  .breadcrumb-icon{
+    cursor: pointer;
+  }
+  .breadcrumb-icon:hover{
+    color: skyblue
+  }
   </style>
+  

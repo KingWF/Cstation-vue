@@ -387,7 +387,7 @@ export default {
 }
 .base{
   padding-top: 10px;
-  //background: rgba(96, 86, 86, 0.76);
+  /* //background: rgba(96, 86, 86, 0.76); */
   position: absolute;
   z-index: 999;
   width: 100%;
