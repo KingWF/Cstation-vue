@@ -80,7 +80,7 @@
         <el-table-column label="操作" align="center" #default="scoped">
           <el-button type="primary" @click = "$router.push('/upPersonal/viewVideo/'+scoped.row.id)">查看</el-button>
           <el-button type="warning" v-if="scoped.row.state != 'video_lock'"
-            
+            @click="$router.push('/upPersonal/editVideo/'+scoped.row.id)"
             >编辑</el-button
           >
           <el-button
