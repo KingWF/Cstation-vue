@@ -60,6 +60,7 @@ export default {
     video: Object,
     danmuList: Array
   },
+
   methods: {
     // 加载页面监听
     addPopstateListener() {
@@ -79,7 +80,7 @@ export default {
       let video = this.video
       let danmuList = []
 
-      console.log(this.danmuList);
+      console.log('该视频的弹幕信息',this.danmuList);
 
       // 遍历弹幕封装数据
       for (const danmu of this.danmuList) {
@@ -97,7 +98,6 @@ export default {
         danmuList.push(comment)
       }
 
-      console.log(video)
       this.player = new Player({
         id: 'xgPlayerWrap', // 占位dom元素
         width: 640,
@@ -199,6 +199,7 @@ export default {
         this.$emit("ended")
       })
     },
+    // 非实时弹幕
     sendDanmu() {
       let content = {
         start: this.playertime * 1000,
@@ -225,23 +226,46 @@ export default {
       })
 
       // console.log(content)
-      
+
     },
-    sendTimeDanmu() {
-      let content = {
-        start: this.playertime * 1000,
-        txt: this.damuContent,
-        vid: this.video.id,
-        style:{}
+    // 发送实时弹幕
+    send(){
+      const a=this.damuTimeContent;
+      console.log('实时弹幕',a)
+      if (a.match(/^\s*$/)){
+        ElMessage({
+          showClose: true,
+          message: '消息不可为空，发送失败！',
+          type: 'warning',
+        })
+      }else {
+        // 构造弹幕结构
+        let content = {
+          start: this.playertime * 1000,
+          txt: this.damuTimeContent,
+        }
+        const contentStr=JSON.stringify(content);
+        console.log('发送弹幕',contentStr)
+        // // 发送弹幕
+        this.ws.send(contentStr);
+        this.damuTimeContent='';
       }
-        // 发弹幕到屏幕上
-        this.player.danmu.sendComment(content)
-        // 清空弹幕输入框
-        this.damuContent = ''
-
-      // console.log(content)
-
     },
+    // sendTimeDanmu() {
+    //   let content = {
+    //     start: this.playertime * 1000,
+    //     txt: this.damuContent,
+    //     vid: this.video.id,
+    //     style:{}
+    //   }
+    //     // 发弹幕到屏幕上
+    //     this.player.danmu.sendComment(content)
+    //     // 清空弹幕输入框
+    //     this.damuContent = ''
+    //
+    //   // console.log(content)
+    //
+    // },
     getConnect(){
       console.log('用户信息',window.localStorage.getItem('user'))
       const tokenStr=JSON.parse(window.localStorage.getItem('user'));
@@ -282,7 +306,9 @@ export default {
         start: 0,
         txt: '',
         vid: this.video.id,
-        style:{}
+        style:{
+          color:''
+        }
       }
       content.start=message.start+1000
       content.id=message.id
@@ -299,6 +325,7 @@ export default {
       this.ws.close();
       console.log('用户退出实时弹幕',window.localStorage.getItem('user'))
     },
+
   //   监听页面退出
    handleBeforeUnload (event) {
       if (hasUnsavedChanges) {
