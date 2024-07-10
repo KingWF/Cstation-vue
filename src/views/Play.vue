@@ -189,7 +189,13 @@ export default{
     // 提交举报
     confirmReport(){
       console.log('选择的内容',this.checkList)
-      this.$axios.get("report/add/" + this.video.id).then(res => {
+      let reportReason=''
+      for (const argument of this.checkList) {
+        reportReason=reportReason+argument+'-'
+      }
+      reportReason=reportReason.substring(0,reportReason.length-1)
+      console.log('拼接后的举报信息',reportReason)
+      this.$axios.get("report/addReport/" + reportReason).then(res => {
         if(res.data.code == 200){
           this.$message.success("举报成功")
         }

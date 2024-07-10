@@ -15,9 +15,6 @@
         <!-- 4.其它视频的列表 -->
       </el-col>
     </el-row>
-    <div>
-      <el-button type="primary" @click="() => $router.push('/chat')" style="position:fixed;">进入聊天室</el-button>
-    </div>
   </div>
 </template>
 
