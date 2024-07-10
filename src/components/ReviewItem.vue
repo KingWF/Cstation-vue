@@ -30,9 +30,12 @@
       <el-col :span="5" :offset="19">
         <!-- 要实现点赞、踩的功能需要给t_review表添加两个字段：点赞数、踩的数量 -->
         <div class="action">
-          <img src="@/assets/up.png" alt="" width="20px">
+          <img src="@/assets/up.png" v-if="review.likeFlag===0||undefined" alt="" width="15px" @click="like()">
+          <img src="@/assets/up-check.png" v-if="review.likeFlag===1" alt="" width="15px" @click="like()">{{review.likeCount}}
           &nbsp;&nbsp;&nbsp;&nbsp;
-          <img src="@/assets/down.png" alt="" width="20px">
+          <img src="@/assets/down.png" v-if="review.downFlag===0||undefined" alt="" width="15px" @click="down()">
+          <img src="@/assets/down-check.png" v-if="review.downFlag===1" alt="" width="15px" @click="down()">{{review.downCount}}
+
         </div>
       </el-col>
     </el-row>
@@ -72,6 +75,33 @@ export default{
         this.$emit("del", this.review.id)
       }).catch(() => {
         console.log("点击了取消")
+      })
+    },
+    like(){
+      console.log("点赞")
+      // 发送点赞请求
+      this.$axios.get("review/likeOrNotComment",{params:{
+        id: this.review.id,
+        vid: this.review.vid,
+        flag: this.review.likeFlag===1?0:1
+        }
+    }).then(res => {
+      console.log(res.data)
+        //刷新数据
+        this.$emit("refresh")
+    })
+    },
+    down(){
+      console.log("踩他")
+      this.$axios.get("review/likeOrNotComment",{params:{
+        id: this.review.id,
+        vid: this.review.vid,
+        flag: this.review.downFlag===1?0:2
+        }
+      }).then(res => {
+        console.log(res.data)
+        //刷新数据
+        this.$emit("refresh")
       })
     }
   }

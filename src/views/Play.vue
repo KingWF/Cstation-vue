@@ -45,7 +45,7 @@
               <el-col :span="8">
                 <el-scrollbar height="600px" style="border: 0.5px solid #dedede">
                   <el-row v-for="review in reviewList" :key="review">
-                    <ReviewItem :review="review" @del="delReview"></ReviewItem>
+                    <ReviewItem :review="review" @del="delReview" @refresh="loadComments"></ReviewItem>
                   </el-row>
                 </el-scrollbar>
               </el-col>
@@ -265,6 +265,14 @@ export default{
           break
         }
       }
+    },
+    loadComments() {
+
+      // 重新加载评论数据
+      this.$axios.get("review/findByVid/" + this.video.id).then(res => {
+        console.log(res.data.data)
+        this.reviewList = res.data.data
+      })
     },
     playEnd(){
       console.log("视频播放结束了...")
