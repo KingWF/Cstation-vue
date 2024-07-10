@@ -1,14 +1,14 @@
 <template>
   <div>
     <el-container style="">
-      <el-header style="height: 140px;background-color:black;">
-        <Header></Header>
+      <el-header style="height: 140px;background-color:black;padding: 0">
+        <Header @handle="testFn"></Header>
       </el-header>
-      <el-container style="">
+      <el-container class="up-container" >
         <el-aside width="200px" style="height: 600px;">
           <!-- 菜单 -->
           <el-scrollbar>
-            <el-menu >
+            <el-menu v-model="menuActiveIndex">
               <el-menu-item index="1" @click="$router.push('/upPersonal/videoManage')">
                 <el-icon><VideoCamera/></el-icon>
                 视频管理</el-menu-item>
@@ -42,9 +42,26 @@ import { RouterLink, RouterView } from 'vue-router'
 export default{
   components:{
     Header
+  },
+  methods:{
+    testFn(){
+      console.log('testFn')
+    }
+  },
+  mounted() {
+    
+  },
+  data(){
+    return{
+      menuActiveIndex: "1"
+    }
   }
+
 }
 </script>
 <style scoped>
-
+/*  */
+.up-container{
+  margin-top: 75px;
+}
 </style>
