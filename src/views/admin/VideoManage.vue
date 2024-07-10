@@ -44,14 +44,12 @@
 
         <el-table-column label="视频状态" align="center" #default="scoped"  width="100">
           <el-tag v-if="scoped.row.state == 'video_pass'" type="success">正常</el-tag>
-          <el-tag v-if="scoped.row.state == 'video_commit'" type="warning">审核中</el-tag>
-          <el-tag v-if="scoped.row.state == 'video_reject'" type="danger">未通过</el-tag>
-          <el-tag v-if="scoped.row.state == 'video_lock'" type="info">被锁定</el-tag>
+          <el-tag v-if="scoped.row.state == 'video_lock'" type="info">封禁</el-tag>
         </el-table-column>
 
         <el-table-column label="操作" align="center" #default="scoped">
-          <el-button type="danger" v-if="scoped.row.state != 'video_lock'" @click="lock(scoped)">锁定</el-button>
-          <el-button type="success" v-if="scoped.row.state != 'video_pass'" @click="pass(scoped)">审核</el-button>
+          <el-button type="danger" v-if="scoped.row.state != 'video_lock'" @click="lock(scoped)">封禁</el-button>
+          <el-button type="success" v-if="scoped.row.state != 'video_pass'" @click="pass(scoped)">解封</el-button>
         </el-table-column>
       </el-table>
     </el-row>
@@ -82,16 +80,8 @@ export default{
           label: '通过'
         },
         {
-          value: 'video_commit',
-          label: '审核中'
-        },
-        {
           value: 'video_lock',
           label: '被锁定'
-        },
-        {
-          value: 'video_reject',
-          label: '未通过'
         },
       ]
     }
@@ -133,7 +123,7 @@ export default{
           // 更新页面
           video.state = 'video_lock'
           //
-          this.$message.success("锁定成功")
+          this.$message.success("封禁成功")
         }
       })
     },
@@ -146,7 +136,7 @@ export default{
           // 更新页面
           video.state = 'video_pass'
           //
-          this.$message.success("审核成功")
+          this.$message.success("解封成功")
         }
       })
     },
