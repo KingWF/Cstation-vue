@@ -4,7 +4,9 @@
     <el-row>
       <el-col>
         <div class="breadcrumb">
-          <el-icon class="breadcrumb-icon" @click="$router.go(-1)" size="20"><ArrowLeft /></el-icon>
+          <el-icon class="breadcrumb-icon" @click="$router.go(-1)" size="20"
+            ><ArrowLeft
+          /></el-icon>
           <el-breadcrumb separator="/">
             <el-breadcrumb-item :to="{ path: '/upPersonal' }">
               Up主页
@@ -12,15 +14,12 @@
             <el-breadcrumb-item :to="{ path: '/upPersonal/videoManage' }">
               视频管理
             </el-breadcrumb-item>
-            <el-breadcrumb-item>
-              视频查看
-            </el-breadcrumb-item>
+            <el-breadcrumb-item> 视频查看 </el-breadcrumb-item>
             <el-breadcrumb-item>
               {{ title }}
             </el-breadcrumb-item>
           </el-breadcrumb>
         </div>
-        
       </el-col>
     </el-row>
     <!-- 视频信息 -->
@@ -92,6 +91,14 @@
               <el-tag v-if="video.state === 'video_reject'" type="error"
                 >审核未通过</el-tag
               >
+              <el-link
+                @click="$router.push(`/play/${this.video.id}`)"
+                style="margin-left: 10px"
+                v-if="video.state === 'video_pass'"
+                type="primary"
+              >
+                前往视频播放
+              </el-link>
             </div>
           </el-col>
         </el-row>
@@ -187,15 +194,15 @@ export default {
 .category {
   margin-top: 20px;
 }
-.breadcrumb{
+.breadcrumb {
   display: flex;
   flex-direction: row;
   align-items: center;
 }
-.breadcrumb-icon{
+.breadcrumb-icon {
   cursor: pointer;
 }
-.breadcrumb-icon:hover{
-  color: skyblue
+.breadcrumb-icon:hover {
+  color: skyblue;
 }
 </style>
