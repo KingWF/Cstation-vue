@@ -21,7 +21,7 @@
               <el-menu-item index="4">
                 <el-icon><Setting/></el-icon>
                 分类管理</el-menu-item>
-              <el-menu-item index="5">
+              <el-menu-item index="5"  @click="$router.push('/adminPersonal/userManage')">
                 <el-icon><Setting/></el-icon>
                 用户管理</el-menu-item>
               <el-menu-item index="6">

@@ -75,6 +75,11 @@ const router = createRouter({
           path: 'reviewManage',
           name: 'adminReviewManage',
           component: () => import('../views/admin/ReviewManage.vue')
+        },
+          {
+          path: 'userManage',
+          name: 'adminUserManage',
+          component: () => import('../views/admin/UserManage.vue')
         }
       ] 
     }
