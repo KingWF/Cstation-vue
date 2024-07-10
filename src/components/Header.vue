@@ -1,9 +1,11 @@
 <template>
-  <div class="image-container" v-if="hideLogo">
-    <img :src="imgSrc" alt="Background Image">
-    <div class="logo">
-      <img src="@/assets/logo.png"
-           alt="">
+  <div class="image-container" v-if="hideLogo" @click="backHome">
+    <div>
+      <img :src="imgSrc" alt="Background Image" class="home-img">
+      <div class="logo">
+        <img src="@/assets/logo.png"
+             alt="">
+      </div>
     </div>
   </div>
   <div  class="base" :style="{background: topColor}">
@@ -26,11 +28,11 @@
       </el-col>
 
       <!-- 搜索输入框 -->
-      <el-col :span="5" style="display: flex;justify-content: center;margin-top: 5px" >
+      <el-col :span="5" style="display: flex;justify-content: center" >
         <!-- 输入框 -->
         <el-input
             v-model="searchKey"
-            style="width: 400px"
+            style="width: 400px;height: 35px"
             placeholder="输入搜索内容~"
             :prefix-icon="Search"
             @keyup.enter="onSearch()"
@@ -44,16 +46,16 @@
         <div @click="checkState" >
           <el-popover
               @hide="hideInfo"
-              :width="400"
+              :width="300"
               popper-style="margin-top: 80px; padding: 20px;"
           >
             <template #reference>
-              <el-avatar :size="50" @mouseenter="bigAvater" :src="avatar" class="avatar" :style="avatarStyle"/>
+              <el-avatar :size="35" @mouseenter="bigAvater" :src="avatar" class="avatar" :style="avatarStyle"/>
             </template>
             <template #default>
               <el-row :gutter="30">
                 <el-col :span="24"  style="display: flex;justify-content: center">
-                <div style="font-size: 30px;font-weight: bold">{{user.account}}</div>
+                <div style="font-size: 25px;font-weight: bold">{{user.account}}</div>
                 </el-col>
               </el-row>
               <el-row :gutter="30" justify="center">
@@ -104,26 +106,26 @@
                 </el-col>
               </el-row>
 <!--              个人中心-->
-              <el-row style="margin:15px 0 15px 0">
+              <el-row style="margin:15px 0 15px 0" @click="toPage('/upPersonal')">
                 <el-col :span="4"><el-icon size="25"><User /></el-icon></el-col>
                 <el-col :span="18" style="font-size: 18px">个人中心</el-col>
                 <el-col :span="2"><el-icon size="20"><ArrowRight /></el-icon></el-col>
               </el-row>
 <!--              投稿管理-->
-              <el-row style="margin:15px 0 15px 0">
+              <el-row style="margin:15px 0 15px 0" @click="toPage('/upPersonal')">
                 <el-col :span="4"><el-icon size="25"><VideoPlay /></el-icon></el-col>
                 <el-col :span="18" style="font-size: 18px">投稿管理</el-col>
                 <el-col :span="2"><el-icon size="20"><ArrowRight /></el-icon></el-col>
               </el-row>
 <!--              推荐服务-->
-              <el-row style="margin:15px 0 15px 0">
+              <el-row style="margin:15px 0 15px 0" @click="toPage('/upPersonal')">
                 <el-col :span="4"><el-icon size="25"><Star /></el-icon></el-col>
                 <el-col :span="18" style="font-size: 18px">推荐服务</el-col>
                 <el-col :span="2"><el-icon size="20"><ArrowRight /></el-icon></el-col>
               </el-row>
               <el-divider />
 <!--              退出登录-->
-              <el-row style="margin:15px 0 15px 0">
+              <el-row style="margin:15px 0 15px 0" @click="toPage('/upPersonal')">
                 <el-col :span="4"><el-icon size="25"><Remove /></el-icon></el-col>
                 <el-col :span="18" style="font-size: 18px">退出登录</el-col>
                 <el-col :span="2"><el-icon size="20"><ArrowRight /></el-icon></el-col>
@@ -131,43 +133,40 @@
             </template>
           </el-popover>
         </div>
-        <ul class="menu2" >
-          <li class="meau-right" >
+        <div class="menu2" >
+          <div class="meau-right" >
             <el-icon color="white" size="25px"><Help /></el-icon>
             <div style="color: white;">大会员</div>
-          </li>
-          <li class="meau-right">
+          </div>
+          <div class="meau-right">
             <el-icon color="white" size="25px"><ChatDotRound /></el-icon>
             <div style="color: white;">消息</div>
-          </li>
-          <li class="meau-right">
+          </div>
+          <div class="meau-right">
             <el-icon color="white" size="25px"><View /></el-icon>
             <div style="color: white;">动态</div>
-          </li>
-          <li class="meau-right">
+          </div>
+          <div class="meau-right">
             <el-icon color="white" size="25px"><Clock /></el-icon>
             <div style="color: white;">历史</div>
-          </li>
-          <li class="meau-right">
+          </div>
+          <div class="meau-right">
             <el-icon color="white" size="25px"><User /></el-icon>
             <div style="color: white;">创作中心</div>
-          </li>
-          <li style="margin-left: 10px;margin-right: 10px;">
-            <div style="color: white;">
-              <el-button type="danger"
-                         @click="upload"
-                         v-if="isNotAdmin()">
+          </div>
+          <div class="meau-right">
+              <el-button type="danger" @click="upload" v-if="isNotAdmin()">
                 <el-icon>
                   <UploadFilled />
                 </el-icon>投稿
               </el-button>
-
+          </div>
+          <div class="meau-right">
               <el-button type="danger" plain v-if="isLogin" @click="logout">
                 注销
               </el-button>
-            </div>
-          </li>
-        </ul>
+          </div>
+        </div>
       </el-col>
     </el-row>
 
@@ -200,10 +199,11 @@
 </template>
 <script>
 
-import {Search} from "@element-plus/icons-vue";
+import {Search, UploadFilled} from "@element-plus/icons-vue";
 import axios from "axios";
 
 export default {
+  components: {UploadFilled},
   data(){
     return{
       dialogVisible : false, // 默认情况下对话框隐藏
@@ -269,21 +269,14 @@ export default {
     }
 
   },
-  // watch: {
-  //   '$route.query.searchkey': {
-  //     immediate: true,
-  //     handler(newVal) {
-  //       if (newVal) {
-  //         console.log('新参数',newVal)
-  //         this.$router.push({ path: '/search', query: { searchkey: newVal } });
-  //       }
-  //     }
-  //   }
-  // },
   methods:{
-    // 设置搜索关键字
-    setSearchKey(key){
-      this.searchKey = key
+    // 跳转页面
+    toPage(path){
+      this.$router.push(path)
+    },
+    // 返回首页
+    backHome(){
+      this.$router.push('/')
     },
     // 等级样式
     rankFormat(percentage) {
@@ -380,10 +373,10 @@ export default {
 <style scoped>
 .image-container{
   position: relative;
-  img{
-    width: 100%;
-    height: 200px;
-  }
+}
+.home-img{
+  width: 100%;
+  height: 130px;
 }
 .base{
   padding-top: 10px;
@@ -397,11 +390,13 @@ export default {
 .logo{
   margin-left: 20px;
   position: absolute;
-  top: 90px;
+  //top: 90px;
+  top: 45px;
   img{
-    width: 400px;
-    height: 100px;
+    width: 300px;
+    height: 80px;
   }
+  overflow: hidden;
 }
 .menu {
   display: flex;
@@ -412,13 +407,10 @@ export default {
   overflow: hidden;
 }
 .menu2 {
-
   display: flex;
-  list-style-type: none;
   justify-content: space-around;
-  margin: 0 0 0 40px;
-  padding: 0;
-  overflow: hidden;
+  //margin: 0 0 0 40px;
+  margin-left: 40px;
 }
 .menu li {
   float: left;
@@ -427,7 +419,7 @@ export default {
 .menu li a {
   display: block;
   color: #ffffff;
-  font-size: 20px;
+  font-size: 15px;
   text-align: center;
   padding: 10px 10px;
   text-decoration: none;
@@ -446,10 +438,13 @@ export default {
   clear: both;
 }
 .meau-right{
-  margin-left: 20px;
-  margin-right: 20px;
-  display:flex;flex-direction:column;
+  display: flex; /* 启用 Flexbox */
+  white-space: nowrap; /* 防止内容换行 */
+  //overflow: hidden; /* 隐藏溢出内容 */
+  text-overflow: ellipsis; /* 当内容溢出时显示省略号 */
+  flex-direction:column;
   align-items: center;
+  font-size: 13px;
 }
 
 /* 头像变化*/

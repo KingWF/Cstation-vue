@@ -1,8 +1,8 @@
 <template>
   <div>
-    <el-container style="">
-      <el-header style="height: 140px;background-color:black;padding: 0">
-        <Header @handle="testFn"></Header>
+    <el-container>
+      <el-header style="padding: 0 ;">
+        <Header :hideLogo="hideLogo" :topColor="topColor" :keepSearchKey="searchKey" :enableSearch="enableSearch"></Header>
       </el-header>
       <el-container class="up-container" >
         <el-aside width="200px" style="height: 600px;">
@@ -53,7 +53,11 @@ export default{
   },
   data(){
     return{
-      menuActiveIndex: "1"
+      menuActiveIndex: "1",
+      hideLogo: false,
+      hideSearch: false,
+      topColor: '#0e6ec9',
+      enableSearch:true
     }
   }
 
@@ -62,6 +66,6 @@ export default{
 <style scoped>
 /*  */
 .up-container{
-  margin-top: 75px;
+  margin-top: 50px;
 }
 </style>

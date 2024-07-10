@@ -92,9 +92,6 @@
     >
       <el-checkbox-group v-model="checkList" v-for="(item,index) in reportList">
         <el-checkbox :label="item" />
-<!--        <el-checkbox label="Option B" />-->
-<!--        <el-checkbox label="Option C"  />-->
-<!--        <el-checkbox label="Option D"   />-->
       </el-checkbox-group>
       <template #footer>
         <div class="dialog-footer">
@@ -114,7 +111,7 @@ import MyVideo from '../components/MyVideo.vue'
 import Header from '../components/Header.vue'
 import Editor from '../components/editor/Editor.vue'
 import ReviewItem from '../components/ReviewItem.vue'
-import {ElMessageBox} from "element-plus";
+import {ElMessage, ElMessageBox} from "element-plus";
 import {MessageBox} from "@element-plus/icons-vue";
 
 export default{
@@ -130,7 +127,7 @@ export default{
       key: null,
       reportVisible: false,
       checkList:[],
-      reportList:['违法未尽','赌博诈骗','侵权申述']
+      reportList:['违法未尽','赌博诈骗','侵权申述','违规推广','人身攻击','出现小黑子','色情低俗','血腥暴力']
     }
   },
   mounted(){
@@ -189,15 +186,34 @@ export default{
     // 提交举报
     confirmReport(){
       console.log('选择的内容',this.checkList)
-      let reportReason=''
-      for (const argument of this.checkList) {
-        reportReason=reportReason+argument+'-'
+      let tReport={
+        id:0,
+        uid:0,
+        vid:this.video.id,
+        reason:'',
+        state:''
       }
-      reportReason=reportReason.substring(0,reportReason.length-1)
-      console.log('拼接后的举报信息',reportReason)
-      this.$axios.get("report/addReport/" + reportReason).then(res => {
-        if(res.data.code == 200){
-          this.$message.success("举报成功")
+      for (const argument of this.checkList) {
+        tReport.reason=tReport.reason+argument+'-'
+      }
+      tReport.reason=tReport.reason.substring(0,tReport.reason.length-1)
+      console.log('拼接后的举报信息', tReport)
+
+      this.$axios.post("report/addReport", tReport).then(res => {
+        console.log(res)
+        if(res.data.code === 200){
+          if(res.data.data){
+            ElMessage({
+              message: '举报提交成功~',
+              type: 'success',
+            })
+          }else{
+            ElMessage({
+            message: '举报提交失败！',
+            type: 'error',
+          })
+          }
+
         }
       })
       this.reportVisible = false
