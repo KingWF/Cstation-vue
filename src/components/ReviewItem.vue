@@ -35,7 +35,6 @@
           &nbsp;&nbsp;&nbsp;&nbsp;
           <img src="@/assets/down.png" v-if="review.downFlag===0||undefined" alt="" width="15px" @click="down()">
           <img src="@/assets/down-check.png" v-if="review.downFlag===1" alt="" width="15px" @click="down()">{{review.downCount}}
-
         </div>
       </el-col>
     </el-row>

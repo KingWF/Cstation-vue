@@ -35,13 +35,13 @@
           <el-table-column prop="account" label="用户名" width="180" align="center"/>
 
           <el-table-column label="评论状态" align="center" #default="scoped"  width="100">
-            <el-tag v-if="scoped.row.state == 'review_pass'" type="success">正常</el-tag>
-            <el-tag v-if="scoped.row.state == 'review_lock'" type="info">被锁定</el-tag>
+            <el-tag v-if="scoped.row.state == 'review_pass'" type="success">审核通过</el-tag>
+            <el-tag v-if="scoped.row.state == 'review_lock'" type="info">审核不通过</el-tag>
           </el-table-column>
   
           <el-table-column label="操作" align="center" #default="scoped">
-            <el-button type="danger" v-if="scoped.row.state != 'review_lock'" @click="lock(scoped)">锁定</el-button>
-            <el-button type="success" v-if="scoped.row.state != 'review_pass'" @click="pass(scoped)">审核</el-button>
+            <el-button type="danger" @click="lock(scoped)">不通过</el-button>
+            <el-button type="success" @click="pass(scoped)">通过</el-button>
           </el-table-column>
         </el-table>
       </el-row>
@@ -73,7 +73,7 @@
           },
           {
             value: 'review_lock',
-            label: '被锁定'
+            label: '不通过'
           }
         ]
       }
@@ -115,7 +115,7 @@
             // 更新页面
             review.state = 'review_lock'
             //
-            this.$message.success("锁定成功")
+            this.$message.success("审核不通过")
           }
         })
       },
@@ -128,7 +128,7 @@
             // 更新页面
             review.state = 'review_pass'
             //
-            this.$message.success("审核成功")
+            this.$message.success("审核通过")
           }
         })
       },

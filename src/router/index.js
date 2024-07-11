@@ -68,7 +68,12 @@ const router = createRouter({
           path:'editVideo/:vid',
           name:'editVideo',
           component:()=>import('@/views/up/EditVideo.vue')
-        }
+        },
+        {
+          path: 'myMessage',  // 二级路由的path不能以/开头，只写字符串就行
+          name: 'myMessage',
+          component: () => import('../views/up/MyMessage.vue')
+        },
       ]  
     },
     {

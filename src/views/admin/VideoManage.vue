@@ -51,7 +51,7 @@
 
         <el-table-column label="操作" align="center" #default="scoped">
           <el-button type="danger" v-if="scoped.row.state != 'video_lock'" @click="lock(scoped)">锁定</el-button>
-          <el-button type="success" v-if="scoped.row.state != 'video_pass'" @click="pass(scoped)">审核</el-button>
+          <el-button type="success" v-if="scoped.row.state == 'video_lock'" @click="changeState(scoped)">审核</el-button>
         </el-table-column>
       </el-table>
     </el-row>
@@ -66,11 +66,38 @@
         />
     </el-row>
   </div>
+
+  <!-- 审核对话框 -->
+   <el-dialog v-model="checkDialog" title="审核视频">
+      <el-form>
+        <el-form-item>
+          <el-radio v-model="checkResult" label="video_pass">通过</el-radio>
+          <el-radio v-model="checkResult" label="video_reject">未通过</el-radio>
+        </el-form-item>
+      </el-form>
+      <template #footer>
+      <div class="dialog-footer">
+        <el-button @click="checkDialog = false">取消</el-button>
+        <el-button type="primary" @click="check">
+          确认
+        </el-button>
+      </div>
+    </template>
+   </el-dialog>
 </template>
 <script>
 export default{
   data(){
     return{
+      video: {
+        title: "",
+        cover: "",
+        video: "",
+        uptime: "",
+        state: ""
+      }, // 当前选中的视频对象
+      checkDialog: false, // 审核对话框
+      checkResult: "", // 审核结果
       page: 1, // 页面
       size: 5, // 每一页多少条数据
       total: 0, // 总条数
@@ -137,23 +164,34 @@ export default{
         }
       })
     },
-    pass(scoped){
-      console.log(scoped)
-      // 引用传递
-      let video = scoped.row
-      this.$axios.get("video/pass/" + video.id).then(res => {
+    check(){
+      this.checkDialog = false
+      console.log(this.checkResult)
+      console.log(this.video)
+      if(this.checkResult == "video_pass"){
+      this.$axios.get(`video/pass/` + this.video.id).then(res => {
         if(res.data.code == 200){
           // 更新页面
-          video.state = 'video_pass'
+          this.video.state = this.checkResult
           //
-          this.$message.success("审核成功")
+          this.$message.success("审核通过")
         }
-      })
+      })}else{
+        this.$axios.get(`video/reject/` + this.video.id).then(res => {
+          if(res.data.code == 200){
+            // 更新页面
+            this.video.state = this.checkResult
+            //
+            this.$message.success("审核拒绝")
+          }
+        })
+      }
     },
     changeState(val){
-      console.log(val)
+      console.log(val.row)
       // 将状态传递给后台进行分页查询
-
+      this.video= val.row
+      this.checkDialog = true
     }
   }
 }

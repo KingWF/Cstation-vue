@@ -53,7 +53,8 @@
 
           <el-table-column prop="account" label="账号" width="180" align="center"/>
 
-          <el-table-column prop="level" label="等级" width="180" align="center"/>
+          <el-table-column prop="level" label="等级" width="180" align="center">
+          </el-table-column>
 
           <el-table-column label="用户状态" align="center" #default="scoped"  width="100">
             <el-tag v-if="scoped.row.state === 'user_normal'" type="success">正常</el-tag>
@@ -63,11 +64,29 @@
           <el-table-column label="操作" align="center" #default="scoped">
             <el-button type="danger" v-if="scoped.row.state === 'user_normal'" @click="lock(scoped)">锁定</el-button>
             <el-button type="success" v-if="scoped.row.state !== 'user_normal'" @click="pass(scoped)">解锁</el-button>
-            <el-button type="success" >修改</el-button>
+            <el-button type="success" @click="changeState(scoped)" >修改</el-button>
           </el-table-column>
         </el-table>
       </el-row>
-
+    <!-- 修改用户等级的对话框 -->
+      <el-dialog title="修改用户等级" v-model="modifyLevelDialogVisible"  width="500" >
+        <el-form :model="form" >
+          <el-form-item label="新等级"   >
+            <el-select v-model="form.level" placeholder="请选择">
+              <el-option
+                v-for="item in levelList"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              />
+            </el-select>
+          </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+          <el-button @click="modifyLevelDialogVisible = false">取 消</el-button>
+          <el-button type="primary" @click="submitModifyLevel">确 定</el-button>
+        </div>
+      </el-dialog>
       <!-- 分页 -->
       <el-row>
         <el-pagination 
@@ -91,6 +110,11 @@
         state: undefined,
         level: undefined,
         name: undefined,
+        modifyLevelDialogVisible: false, // 控制修改等级对话框的显示隐藏
+        form: {
+          id: 0,
+          level: ''
+      },
         stateList:[
           {
             value: 'user_normal',
@@ -191,10 +215,35 @@
         })
       },
       changeState(val){
-        console.log(val)
+        console.log(val.row)
         // 将状态传递给后台进行分页查询
+        this.showModifyLevelDialog(val.row);
+      },
+      showModifyLevelDialog(row) {
+      this.form.id = row.id
+      this.modifyLevelDialogVisible = true;
+    },
+    submitModifyLevel() {
+      // 提交修改等级的逻辑
+      // 这里可以调用你的API进行修改等级的操作
+      // 修改完成后，记得关闭对话框并刷新数据
+      console.log(this.form)
 
-      }
+      this.$axios.get("user/changeUserLevel",{
+        params: {
+          id: this.form.id,
+          level: this.form.level
+        }
+      }).then(res => {
+        if(res.data.code == 200){
+          this.$message.success("修改成功")
+        }
+        this.modifyLevelDialogVisible = false;
+        this.getData(); // 假设 getData 是你的数据获取方法
+        this.form.id = 0;
+        this.form.level='';
+      })
+    },
     }
   }
 </script>
