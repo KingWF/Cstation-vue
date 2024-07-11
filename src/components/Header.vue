@@ -1,5 +1,5 @@
 <template>
-  <div class="image-container" v-if="!hideLogo" @click="backHome">
+  <div class="image-container"  v-if="!hideLogo" @click="backHome">
     <div>
       <img :src="imgSrc" alt="Background Image" class="home-img">
       <div class="logo">
@@ -43,16 +43,17 @@
       <!-- 头像、个人、投稿 -->
       <el-col :span="9">
 <!--        头像和个人信息显示-->
-        <div @click="checkState" >
+        <div @click="checkState" v-if="isLogin">
           <el-popover
               @hide="hideInfo"
               :width="300"
               popper-style="margin-top: 80px; padding: 20px;"
+
           >
             <template #reference>
               <el-avatar :size="35" @mouseenter="bigAvater" :src="avatar" class="avatar" :style="avatarStyle"/>
             </template>
-            <template #default>
+            <template #default v-if="isLogin">
               <el-row :gutter="30">
                 <el-col :span="24"  style="display: flex;justify-content: center">
                 <div style="font-size: 25px;font-weight: bold">{{user.account}}</div>
@@ -80,7 +81,7 @@
                 <!--关注-->
                 <el-col :span="8" class="follows" >
                   <el-row style="font-size: 25px;font-weight: 400;color: #000000">
-                    {{followNum}}
+                    {{userSocialInfo[0]}}
                   </el-row>
                   <el-row >
                     关注
@@ -89,7 +90,7 @@
                 <!--粉丝-->
                 <el-col :span="8" class="follows" >
                   <el-row style="font-size: 25px;font-weight: 400;color: #000000">
-                    {{fansNum}}
+                    {{userSocialInfo[2]}}
                   </el-row>
                   <el-row>
                     粉丝
@@ -98,7 +99,7 @@
                 <!--动态-->
                 <el-col :span="8" class="follows" >
                   <el-row style="font-size: 25px;font-weight: 400;color: #000000">
-                    {{dynamicNum}}
+                    {{userSocialInfo[3]}}
                   </el-row>
                   <el-row>
                     动态
@@ -133,6 +134,7 @@
             </template>
           </el-popover>
         </div>
+        <div v-else @click="checkState"> <el-avatar :size="35" :src="avatar" class="avatar" :style="avatarStyle"/></div>
         <div class="menu2" >
           <div class="meau-right" >
             <el-icon color="white" size="25px"><Help /></el-icon>
@@ -155,7 +157,7 @@
             <div style="color: white;">创作中心</div>
           </div>
           <div class="meau-right">
-              <el-button type="danger" @click="upload" v-if="isNotAdmin()">
+              <el-button type="danger" @click="upload" v-if="isNotAdmin() && isLogin">
                 <el-icon>
                   <UploadFilled />
                 </el-icon>投稿
@@ -223,7 +225,8 @@ export default {
       fansNum:41,
       dynamicNum:40,
       imgSrc:'/src/assets/static/233dcdceae41a91bf1ec0268b48ad3dd8e6340ac.jpg@1256w_708h_!web-article-pic.jpg',
-      searchKey:''
+      searchKey:'',
+      userSocialInfo:[]
     }
   },
   mounted(){
@@ -240,6 +243,11 @@ export default {
     if(this.keepSearchKey!==''){
       this.searchKey = this.keepSearchKey
     }
+    //   获取用户社交信息
+    this.$axios.get("user/getUserSocialInfo").then(res => {
+      console.log(res.data.data)
+      this.userSocialInfo = res.data.data
+    })
   },
   computed: {
     Search() {

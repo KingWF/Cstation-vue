@@ -93,6 +93,11 @@ const router = createRouter({
           component: () => import('../views/admin/VideoManage.vue')
         },
         {
+          path: 'reportManage',
+          name: 'adminReportManage',
+          component: () => import('../views/admin/ReportManage.vue')
+        },
+        {
           path: 'reviewManage',
           name: 'adminReviewManage',
           component: () => import('../views/admin/ReviewManage.vue')

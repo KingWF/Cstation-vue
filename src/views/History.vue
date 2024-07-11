@@ -128,7 +128,7 @@ export default {
           name:JSON.parse(window.localStorage.getItem("user")).account,
           cover: record.video.cover,
           title: record.video.title,
-          time: record.tvideoPlayRecord.time,
+          time: this.formatISOToCustom(record.tvideoPlayRecord.time),
           playnums: record.tvideoPlayRecord.playnums,
           uptime: record.video.uptime,
           tvideoPlayRecord: record.tvideoPlayRecord,
@@ -142,7 +142,8 @@ export default {
           size: 'large',
           type: 'primary',
           video: record.video,
-          tvideoPlayRecord: record.tvideoPlayRecord
+          tvideoPlayRecord: record.tvideoPlayRecord,
+          time: this.formatISOToCustom(record.tvideoPlayRecord.time)
         }
         this.activities.push(activity)
       }
@@ -150,12 +151,25 @@ export default {
     })
   },
   methods: {
-    toPlay(video){
+    toPlay(video) {
       this.$router.push({
-        path: '/play/'+video.id
+        path: '/play/' + video.id
       })
+    },
+    //   时间格式转换
+      formatISOToCustom(isoTime) {
+        let date = new Date(isoTime);
+
+        let year = date.getUTCFullYear();
+        let month = ("0" + (date.getUTCMonth() + 1)).slice(-2);
+        let day = ("0" + date.getUTCDate()).slice(-2);
+        let hours = ("0" + date.getUTCHours()).slice(-2);
+        let minutes = ("0" + date.getUTCMinutes()).slice(-2);
+        let seconds = ("0" + date.getUTCSeconds()).slice(-2);
+
+        return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+      }
     }
-  }
 };
 </script>
 

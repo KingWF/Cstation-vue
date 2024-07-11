@@ -6,42 +6,23 @@
           <el-input placeholder="评论内容" v-model="content" style="width: 80%;"></el-input>
           <el-button type="success" @click="search()">搜索</el-button>
         </el-col>
-        <el-col :span="3">
-          <el-select
-            v-model="state"
-            placeholder="请选择"
-            style="width: 240px"
-            @change="changeState"
-          >
-            <el-option
-              v-for="item in stateList"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
-            />
-          </el-select>
-        </el-col>
       </el-row>
   
       <!-- 表格 -->
       <el-row>
         <el-table :data="reviewList" style="width: 100%">
-          <el-table-column prop="id" label="id" width="180" align="center"/>
+          <el-table-column #default="{row}" label="评论者头像" width="180" align="center">
+            <el-avatar :size="90" :src="row.avatar"></el-avatar>
+          </el-table-column>
             
+          <el-table-column prop="account" label="用户名" width="180" align="center"/>
+
           <el-table-column #default="{row}" label="评论内容" width="180" align="center">
             <span v-html="row.content"></span>
           </el-table-column>
 
           <el-table-column prop="time" label="评论时间" width="180" align="center"/>
-          
-          <el-table-column prop="account" label="用户名" width="180" align="center"/>
 
-          <el-table-column label="评论状态" align="center" #default="scoped"  width="110">
-            <el-tag v-if="scoped.row.state == 'review_pass'" type="success">审核通过</el-tag>
-            <el-tag v-if="scoped.row.state == 'review_lock'" type="danger">审核不通过</el-tag>
-            <el-tag v-if="scoped.row.state == 'review_commit'" type="warning">审核中</el-tag>
-          </el-table-column>
-  
           <el-table-column label="操作" align="center" #default="scoped">
             <el-button type="danger" @click="lock(scoped)">不通过</el-button>
             <el-button type="success" @click="pass(scoped)">通过</el-button>
@@ -120,10 +101,10 @@
         let review = scoped.row
         this.$axios.get("review/lock/" + review.id).then(res => {
           if(res.data.code == 200){
-            // 更新页面
-            review.state = 'review_lock'
-            //
             this.$message.success("审核不通过")
+            // 更新页面
+            this.getData()
+            //
           }
         })
       },
@@ -133,10 +114,10 @@
         let review = scoped.row
         this.$axios.get("review/pass/" + review.id).then(res => {
           if(res.data.code == 200){
-            // 更新页面
-            review.state = 'review_pass'
-            //
             this.$message.success("审核通过")
+            // 更新页面
+            this.getData()
+            //
           }
         })
       },
@@ -146,6 +127,10 @@
   
       },
       search(){
+      if(this.content.trim() == "" && this.state.trim() == ""){
+        getData()
+        return
+      }
       // review/findByUid/1/5    review/findByUid?page=1&size=5&account=xxx
       // `模板字符串`  方便拼接字符串
       this.$axios.get(`review/findAll/${this.page}/1000`).then(res =>{
@@ -159,7 +144,7 @@
         console.log(this.content)
         console.log(this.state)
         // 过滤数据
-        if(this.content != "" || this.state != ""){
+        if(this.content != "" && this.state != ""){
         this.reviewList = this.reviewList.filter(item => {
           return item.content.includes(this.content) && item.state == this.state  
       })}else if(this.content != ""){
@@ -169,7 +154,6 @@
         this.reviewList = this.reviewList.filter(item => {
           return item.state == this.state
       })}
-      console.log(this.reviewList)
     })
     }
   }
