@@ -49,13 +49,16 @@ export default {
       this.$refs.passwordFormRef.validate(valid => {
         if (valid) {
           // 提交修改密码的逻辑
-          this.$axios.get("/user/changePassword",{
+          this.$axios.get("/user/changePassword",{params:{
             oldPassword: this.passwordForm.oldPassword,
             newPassword: this.passwordForm.newPassword,
+            }
           })
           .then(res => {
             if(res.data.code === 200){
               this.$message.success('密码修改成功');
+            }else if (res.data.code===501){
+              this.$message.error('原密码错误');
             }else{
               this.$message.error('密码修改失败');
             }
@@ -64,6 +67,11 @@ export default {
             console.error('密码修改失败', error);
           })
           this.showChangePasswordDialog = false;
+          this.passwordForm = {
+            oldPassword: '',
+            newPassword: '',
+            confirmPassword: '',
+          };
           // this.$message.success('密码修改成功');
         } else {
           console.log('error submit!!');

@@ -15,9 +15,9 @@
       <section class="details-section">
         <h2>详细信息</h2>
         <ul>
-          <li><strong>用户姓名:</strong> {{ user.account }} <el-button  :icon="Edit" circle style="margin-left: 100px"/></li>
+          <li><strong>用户姓名:</strong> {{ user.account }} <el-button  :icon="Edit" circle style="margin-left: 100px" @click ="showChangeUsernameDialog=true"/></li>
           <li><strong>等级:</strong>  <el-tag type="success">{{ user.level }}</el-tag> </li>
-          <li><strong>密码:</strong> {{beSecret}}   <el-button  :icon="Edit" circle style="margin-left: 100px"/></li>
+          <li><strong>密码:</strong> {{beSecret}}   <el-button  :icon="Edit" circle style="margin-left: 100px" @click="showChangePasswordDialog = true" /></li>
         </ul>
       </section>
       <section class="stats-section">
@@ -82,6 +82,40 @@
       </template>
     </el-drawer>
   </div>
+  <!-- 修改用户名对话框 -->
+  <el-dialog title="修改用户名" v-model="showChangeUsernameDialog">
+    <el-form :model="usernameForm" :rules="usernameRules" ref="usernameFormRef">
+      <el-form-item label="新用户名" prop="newUsername">
+        <el-input v-model="usernameForm.newUsername" autocomplete="off"></el-input>
+      </el-form-item>
+    </el-form>
+    <template #footer>
+      <span class="dialog-footer">
+        <el-button @click="showChangeUsernameDialog = false">取消</el-button>
+        <el-button type="primary" @click="submitUsernameChange">确定</el-button>
+      </span>
+    </template>
+  </el-dialog>>
+  <div>
+   <!-- 修改密码对话框 -->
+    <el-dialog title="修改密码" v-model="showChangePasswordDialog">
+      <el-form :model="passwordForm" :rules="passwordRules" ref="passwordFormRef">
+        <el-form-item label="原密码" prop="oldPassword">
+          <el-input type="password" v-model="passwordForm.oldPassword" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="新密码" prop="newPassword">
+          <el-input type="password" v-model="passwordForm.newPassword" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="确认密码" prop="confirmPassword">
+          <el-input type="password" v-model="passwordForm.confirmPassword" autocomplete="off"></el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="showChangePasswordDialog = false">取 消</el-button>
+        <el-button type="primary" @click="submitPasswordChange()">确 定</el-button>
+      </div>
+    </el-dialog>
+  </div>
 </template>
 <script>
 import {Edit, UserFilled} from "@element-plus/icons-vue";
@@ -99,9 +133,33 @@ export default {
       },
       userSocialInfo:{
       },
-      password:'',
       showMask: false,
-      isShowDrawer:false
+      isShowDrawer:false,
+      password:'',
+      showChangePasswordDialog: false,
+      passwordForm: {
+        oldPassword: '',
+        newPassword: '',
+        confirmPassword: '',
+      },
+      passwordRules: {
+        oldPassword: [{ required: true, message: '请输入原密码', trigger: 'blur' }],
+        newPassword: [{ required: true, message: '请输入新密码', trigger: 'blur' }],
+        confirmPassword: [
+          { required: true, message: '请再次输入新密码', trigger: 'blur' },
+          { validator: this.validatePasswordMatch, trigger: 'blur' },
+        ],
+      },
+      showChangeUsernameDialog: false,
+      usernameForm: {
+        newUsername: '',
+      },
+      usernameRules: {
+        newUsername: [
+          { required: true, message: '请输入新用户名', trigger: 'blur' },
+          { pattern: /^[a-zA-Z0-9_]{4,16}$/, message: '用户名必须是4到16位的字母、数字或下划线', trigger: 'blur' },
+        ],
+      },
     }
   },
   computed:{
@@ -152,7 +210,94 @@ export default {
     cancelClick() {
       this.isShowDrawer = false
     }
-  }
+  },
+    validatePasswordMatch(rule, value, callback){
+      if (value !== this.passwordForm.newPassword) {
+        callback(new Error('两次输入的密码不一致'));
+      } else {
+        callback();
+      }
+    },
+    changeUsername(){
+       // this.$axios.get("/user/changeUsername",{
+       //   params:{
+       //    id: this.user.id,
+       //    name: null
+       //   }
+       // }).then(res => {
+       //   if(res.data.code === 200){
+       //      this.$message.success('用户名修改成功');
+       //
+       //    }else{
+       //      this.$message.error('用户名修改失败');
+       //    }
+       // })
+
+    },
+    submitPasswordChange() {
+      this.$refs.passwordFormRef.validate(valid => {
+        if (valid) {
+          // 提交修改密码的逻辑
+          this.$axios.get("/user/changePassword",{params:{
+            oldPassword: this.passwordForm.oldPassword,
+            newPassword: this.passwordForm.newPassword,
+            }
+          })
+          .then(res => {
+            if(res.data.code === 200){
+              this.$message.success('密码修改成功');
+            }else if (res.data.code===501){
+              this.$message.error('原密码错误');
+            }else{
+              this.$message.error('密码修改失败');
+            }
+          })
+          .catch(error => {
+            console.error('密码修改失败', error);
+          })
+          this.showChangePasswordDialog = false;
+          this.passwordForm = {
+            oldPassword: '',
+            newPassword: '',
+            confirmPassword: '',
+          };
+          // this.$message.success('密码修改成功');
+        } else {
+          console.log('error submit!!');
+          return false;
+        }
+      });
+    },
+     submitUsernameChange() {
+      this.$refs.usernameFormRef.validate(valid => {
+        if (valid) {
+          // 提交修改用户名的逻辑
+          this.$axios.get('/user/changeName', {
+            params:{
+              id: this.user.id,
+            username: this.usernameForm.newUsername,
+            }
+          }).then(response => {
+            if (response.data.code === 200) {
+              this.user.account = this.usernameForm.newUsername;
+              this.$message({
+                message: '用户名修改成功',
+                type: 'success',
+              });
+              this.showChangeUsernameDialog = false;
+            } else {
+              this.$message.error('用户名修改失败，请检查输入或联系管理员');
+            }
+          }).catch(error => {
+            console.error('Error updating username:', error);
+            this.$message.error('用户名修改失败，请检查网络或稍后再试');
+          });
+        } else {
+          console.log('error submit!!');
+          return false;
+        }
+      });
+    },
 }
 </script>
 <style scoped>

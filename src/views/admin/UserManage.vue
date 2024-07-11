@@ -92,7 +92,7 @@
         <el-pagination 
           layout="prev, pager, next, jumper" 
           :total="total" 
-          :default-page-size="size"
+          v-model:page-size="pageSize"
           @current-change="pageChange"
           />
       </el-row>
@@ -106,6 +106,7 @@
         currentPage: 1, // 页面
         pageSize: 5, // 每一页多少条数据
         total: 0, // 总条数
+        pages: 0,//总页数
         userList: [], //
         state: undefined,
         level: undefined,
@@ -147,6 +148,7 @@
     },
     methods:{
       pageChange(currentPage){
+        console.log("分页" + currentPage)
         this.currentPage = currentPage
         this.getData()
       },
@@ -172,7 +174,9 @@
           let resPage = res.data.data
           // 获取总条数
           this.total = resPage.totalRecords
-          console.log(this.total)
+          //总页数
+          this.pages = resPage.totalPages
+          console.log("总条数" + this.total)
           // 获取当前页数据
           this.userList = resPage.list
           console.log(this.userList)

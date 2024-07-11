@@ -18,7 +18,7 @@
               <el-menu-item index="3" @click="$router.push('/adminPersonal/reviewManage')">
                 <el-icon><Star/></el-icon>
                 评论管理</el-menu-item>
-              <el-menu-item index="4">
+              <el-menu-item index="4" @click="$router.push('/adminPersonal/diversityManage')">
                 <el-icon><Setting/></el-icon>
                 分类管理</el-menu-item>
               <el-menu-item index="5"  @click="$router.push('/adminPersonal/userManage')">
