@@ -51,7 +51,8 @@
 
         <el-table-column label="操作" align="center" #default="scoped">
           <el-button type="danger" v-if="scoped.row.state != 'video_lock'" @click="lock(scoped)">锁定</el-button>
-          <el-button type="success" v-if="scoped.row.state == 'video_lock'" @click="changeState(scoped)">审核</el-button>
+          <el-button type="success" v-if="scoped.row.state == 'video_lock'" @click="unlock(scoped)">解锁</el-button>
+          <el-button type="success" v-if="scoped.row.state == 'video_commit'" @click="changeState(scoped)">审核</el-button>
         </el-table-column>
       </el-table>
     </el-row>
@@ -72,6 +73,8 @@
       <el-form>
         <el-form-item>
           <el-radio v-model="checkResult" label="video_pass">通过</el-radio>
+        </el-form-item>
+        <el-form-item>
           <el-radio v-model="checkResult" label="video_reject">未通过</el-radio>
         </el-form-item>
       </el-form>
@@ -164,6 +167,19 @@ export default{
         }
       })
     },
+    unlock(scoped){
+      console.log(scoped)
+      // 引用传递
+      let video = scoped.row
+      this.$axios.get("video/unlock/" + video.id).then(res => {
+        if(res.data.code == 200){
+          // 更新页面
+          video.state = 'video_commit'
+          //
+          this.$message.success("解锁成功")
+        }
+      })
+    },
     check(){
       this.checkDialog = false
       console.log(this.checkResult)
@@ -182,7 +198,7 @@ export default{
             // 更新页面
             this.video.state = this.checkResult
             //
-            this.$message.success("审核拒绝")
+            this.$message.success("审核不通过")
           }
         })
       }

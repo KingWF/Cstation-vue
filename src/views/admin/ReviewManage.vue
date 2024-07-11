@@ -37,6 +37,7 @@
           <el-table-column label="评论状态" align="center" #default="scoped"  width="100">
             <el-tag v-if="scoped.row.state == 'review_pass'" type="success">审核通过</el-tag>
             <el-tag v-if="scoped.row.state == 'review_lock'" type="info">审核不通过</el-tag>
+            <el-tag v-if="scoped.row.state == 'review_commit'" type="warning">审核中</el-tag>
           </el-table-column>
   
           <el-table-column label="操作" align="center" #default="scoped">
@@ -70,6 +71,10 @@
           {
             value: 'review_pass',
             label: '通过'
+          },
+          {
+            value: 'review_commit',
+            label: '审核中'
           },
           {
             value: 'review_lock',

@@ -208,7 +208,7 @@ export default {
     return{
       dialogVisible : false, // 默认情况下对话框隐藏
       user:{
-        account: "未登录",
+        account: "",
         password: ""
       },
       avatar: "https://cdjava96.oss-cn-chengdu.aliyuncs.com/login.png",
