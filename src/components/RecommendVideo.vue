@@ -31,6 +31,7 @@ export default{
       isLoading:true,
       // 视频数据
       videoList: [],
+      recommendVideo: [],
       items: [],
       loadingMore: false, // 添加一个标志，表示是否正在加载更多内容
     }
@@ -59,11 +60,16 @@ export default{
       }
     },
     async loadMoreContent() {
+      let recommend;
       // 模拟异步加载数据
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      await new Promise(resolve =>
+      this.$axios.get("video/findNew").then(res => {
+        recommend = res.data.data
 
+      })
+      );
       // 更新数据
-      this.videoList.push(...this.videoList); // 假设newItems是从服务器获取的新数据
+      this.recommendVideo.push(...recommend); // 假设newItems是从服务器获取的新数据
 
       // 数据加载完成后，重置loadingMore标志
       this.loadingMore = false;

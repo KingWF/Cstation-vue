@@ -65,7 +65,7 @@
     data(){
       return{
         currentPage: 1, // 页面
-        pageSize: 5, // 每一页多少条数据
+        pageSize: 10, // 每一页多少条数据
         total: 0, // 总条数
         pages: 0,//总页数
         categoryList: [], //
@@ -227,6 +227,7 @@
               //更新页面
               this.getData()
               this.showAddCategoryDialog = false;
+              this.categoryForm.username = '';
 
             } else {
               this.$message.error('分类创建失败，请检查输入或联系管理员');
