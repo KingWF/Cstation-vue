@@ -12,7 +12,7 @@
               <el-menu-item index="1" @click="$router.push('/adminPersonal/videoManage')">
                 <el-icon><VideoCamera/></el-icon>
                 视频管理</el-menu-item>
-              <el-menu-item index="2">
+              <el-menu-item index="2" @click="$router.push('/adminPersonal/reportManage')">
                 <el-icon><Message/></el-icon>
                 投诉管理</el-menu-item>
               <el-menu-item index="3" @click="$router.push('/adminPersonal/reviewManage')">

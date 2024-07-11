@@ -213,6 +213,10 @@ export default{
       // 将状态传递给后台进行分页查询
     },
     search(){
+      if(this.title.trim() == "" && this.state.trim() == ""){
+        getData()
+        return
+      }
       // video/findByUid/1/5    video/findByUid?page=1&size=5&account=xxx
       // `模板字符串`  方便拼接字符串
       this.$axios.get(`video/findAll/${this.page}/1000`).then(res =>{
@@ -228,7 +232,7 @@ export default{
         this.total = resPage.total
         // 获取当前页数据
         this.videoList = resPage.data
-        if(this.title.trim() != "" || this.state.trim() != ""){
+        if(this.title.trim() != "" && this.state.trim() != ""){
         this.videoList = this.videoList.filter(item => {
           return item.title.includes(this.title) && item.state == this.state
         })}else if(this.title.trim() != ""){
@@ -240,6 +244,7 @@ export default{
             return item.state == this.state
           })
         }
+        console.log(this.videoList)
       })
     }
   }
