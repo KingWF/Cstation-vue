@@ -3,8 +3,8 @@
     <!-- 搜索、添加 -->
     <el-row>
       <el-col :span="8">
-        <el-input placeholder="视频标题" style="width: 80%;"></el-input>
-        <el-button type="success">搜索</el-button>
+        <el-input placeholder="视频标题" v-model="title" style="width: 80%;"></el-input>
+        <el-button type="success" @click="search">搜索</el-button>
       </el-col>
       <el-col :span="3">
         <el-select
@@ -51,7 +51,8 @@
 
         <el-table-column label="操作" align="center" #default="scoped">
           <el-button type="danger" v-if="scoped.row.state != 'video_lock'" @click="lock(scoped)">锁定</el-button>
-          <el-button type="success" v-if="scoped.row.state == 'video_lock'" @click="changeState(scoped)">审核</el-button>
+          <el-button type="success" v-if="scoped.row.state == 'video_lock'" @click="unlock(scoped)">解锁</el-button>
+          <el-button type="success" v-if="scoped.row.state == 'video_commit'" @click="openCheckDialog(scoped)">审核</el-button>
         </el-table-column>
       </el-table>
     </el-row>
@@ -72,6 +73,8 @@
       <el-form>
         <el-form-item>
           <el-radio v-model="checkResult" label="video_pass">通过</el-radio>
+        </el-form-item>
+        <el-form-item>
           <el-radio v-model="checkResult" label="video_reject">未通过</el-radio>
         </el-form-item>
       </el-form>
@@ -103,6 +106,7 @@ export default{
       total: 0, // 总条数
       videoList: [], // 当前页的视频列表、数据
       state: "",
+      title: "",
       stateList:[
         {
           value: 'video_pass',
@@ -164,6 +168,19 @@ export default{
         }
       })
     },
+    unlock(scoped){
+      console.log(scoped)
+      // 引用传递
+      let video = scoped.row
+      this.$axios.get("video/unlock/" + video.id).then(res => {
+        if(res.data.code == 200){
+          // 更新页面
+          video.state = 'video_commit'
+          //
+          this.$message.success("解锁成功")
+        }
+      })
+    },
     check(){
       this.checkDialog = false
       console.log(this.checkResult)
@@ -182,16 +199,48 @@ export default{
             // 更新页面
             this.video.state = this.checkResult
             //
-            this.$message.success("审核拒绝")
+            this.$message.success("审核不通过")
           }
         })
       }
     },
+    openCheckDialog(scoped){
+      this.video = scoped.row
+      this.checkDialog = true
+    },
     changeState(val){
       console.log(val.row)
       // 将状态传递给后台进行分页查询
-      this.video= val.row
-      this.checkDialog = true
+    },
+    search(){
+      // video/findByUid/1/5    video/findByUid?page=1&size=5&account=xxx
+      // `模板字符串`  方便拼接字符串
+      this.$axios.get(`video/findAll/${this.page}/1000`).then(res =>{
+        // 响应对象：里面包含了状态、数据、响应头
+        console.log(res)
+        // res.data属性：存放后端返回的数据  ResponseResult 对象
+        console.log(res.data)
+        // res.data.data：分页信息 ResPage
+        console.log(res.data.data)
+        // 获取到了分页信息对象
+        let resPage = res.data.data
+        // 获取总条数
+        this.total = resPage.total
+        // 获取当前页数据
+        this.videoList = resPage.data
+        if(this.title.trim() != "" || this.state.trim() != ""){
+        this.videoList = this.videoList.filter(item => {
+          return item.title.includes(this.title) && item.state == this.state
+        })}else if(this.title.trim() != ""){
+          this.videoList = this.videoList.filter(item => {
+            return item.title.includes(this.title)
+          })
+        }else if(this.state.trim() != ""){
+          this.videoList = this.videoList.filter(item => {
+            return item.state == this.state
+          })
+        }
+      })
     }
   }
 }
