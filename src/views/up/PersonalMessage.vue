@@ -1,19 +1,23 @@
 <template>
   <div class="profile-container">
     <header class="profile-header">
-      <img :src="user.avatar" alt="User Avatar" class="avatar" />
+      <div class="avatar-container">
+        <img :src="user.avatar" alt="User Avatar" class="avatar">
+        <div class="mask" @click="isShowDrawer = true">
+          <i class="fas fa-edit edit-icon"></i>
+        </div>
+      </div>
       <div class="user-info">
-        <h1 class="username">{{ user.account }}</h1>
-
+        <h1 class="username" style="margin-left: 20px">{{ user.account }}</h1>
       </div>
     </header>
     <main class="profile-main">
       <section class="details-section">
         <h2>详细信息</h2>
         <ul>
-          <li><strong>用户姓名:</strong> {{ user.account }} <el-button  :icon="Edit" circle style="margin-left: 100px"/></li>
+          <li><strong>用户姓名:</strong> {{ user.account }} <el-button  :icon="Edit" circle style="margin-left: 100px" @click ="showChangeUsernameDialog=true"/></li>
           <li><strong>等级:</strong>  <el-tag type="success">{{ user.level }}</el-tag> </li>
-          <li><strong>密码:</strong> {{beSecret}}   <el-button  :icon="Edit" circle style="margin-left: 100px"/></li>
+          <li><strong>密码:</strong> {{beSecret}}   <el-button  :icon="Edit" circle style="margin-left: 100px" @click="showChangePasswordDialog = true" /></li>
         </ul>
       </section>
       <section class="stats-section">
@@ -34,15 +38,88 @@
           <span class="stat-count">{{ userSocialInfo[3] }}</span>
           <span class="stat-label">视频</span>
         </div>
-
-
-
       </section>
     </main>
+    <el-drawer v-model="isShowDrawer" :direction="direction">
+      <template #header>
+        <h4>修改头像</h4>
+      </template>
+      <template #default>
+        <el-row style="margin-bottom: 20px">
+          <el-col :span="6">
+              原本头像
+          </el-col>
+          <el-col :span="18" style="display: flex;justify-content: center">
+            <el-avatar :src="user.avatar" :size="140"></el-avatar>
+          </el-col>
+        </el-row>
+<!--        分割线-->
+        <el-divider />
+        <el-row >
+          <el-col :span="24" style="display: flex;justify-content: center">
+
+            <el-upload
+                ref="upload"
+                class="upload-demo"
+                :action="`/api/user/changeAvatar/${this.user.id}`"
+                :limit="1"
+                :on-exceed="handleExceed"
+                :auto-upload="false"
+                :on-success="successUpload"
+            >
+              <template #trigger>
+                <el-button type="primary" :size="140">上传新头像</el-button>
+              </template>
+            </el-upload>
+          </el-col>
+        </el-row>
+      </template>
+      <template #footer>
+        <div style="flex: auto">
+          <el-button @click="cancelClick">取消</el-button>
+          <el-button type="primary" @click="submitUpload">提交</el-button>
+        </div>
+      </template>
+    </el-drawer>
+  </div>
+  <!-- 修改用户名对话框 -->
+  <el-dialog title="修改用户名" v-model="showChangeUsernameDialog">
+    <el-form :model="usernameForm" :rules="usernameRules" ref="usernameFormRef">
+      <el-form-item label="新用户名" prop="newUsername">
+        <el-input v-model="usernameForm.newUsername" autocomplete="off"></el-input>
+      </el-form-item>
+    </el-form>
+    <template #footer>
+      <span class="dialog-footer">
+        <el-button @click="showChangeUsernameDialog = false">取消</el-button>
+        <el-button type="primary" @click="submitUsernameChange">确定</el-button>
+      </span>
+    </template>
+  </el-dialog>>
+  <div>
+   <!-- 修改密码对话框 -->
+    <el-dialog title="修改密码" v-model="showChangePasswordDialog">
+      <el-form :model="passwordForm" :rules="passwordRules" ref="passwordFormRef">
+        <el-form-item label="原密码" prop="oldPassword">
+          <el-input type="password" v-model="passwordForm.oldPassword" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="新密码" prop="newPassword">
+          <el-input type="password" v-model="passwordForm.newPassword" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="确认密码" prop="confirmPassword">
+          <el-input type="password" v-model="passwordForm.confirmPassword" autocomplete="off"></el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="showChangePasswordDialog = false">取 消</el-button>
+        <el-button type="primary" @click="submitPasswordChange()">确 定</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 <script>
-import {Edit} from "@element-plus/icons-vue";
+import {Edit, UserFilled} from "@element-plus/icons-vue";
+import {ElMessageBox, genFileId} from "element-plus";
 
 export default {
   data() {
@@ -56,10 +133,39 @@ export default {
       },
       userSocialInfo:{
       },
-      password:''
+      showMask: false,
+      isShowDrawer:false,
+      password:'',
+      showChangePasswordDialog: false,
+      passwordForm: {
+        oldPassword: '',
+        newPassword: '',
+        confirmPassword: '',
+      },
+      passwordRules: {
+        oldPassword: [{ required: true, message: '请输入原密码', trigger: 'blur' }],
+        newPassword: [{ required: true, message: '请输入新密码', trigger: 'blur' }],
+        confirmPassword: [
+          { required: true, message: '请再次输入新密码', trigger: 'blur' },
+          { validator: this.validatePasswordMatch, trigger: 'blur' },
+        ],
+      },
+      showChangeUsernameDialog: false,
+      usernameForm: {
+        newUsername: '',
+      },
+      usernameRules: {
+        newUsername: [
+          { required: true, message: '请输入新用户名', trigger: 'blur' },
+          { pattern: /^[a-zA-Z0-9_]{4,16}$/, message: '用户名必须是4到16位的字母、数字或下划线', trigger: 'blur' },
+        ],
+      },
     }
   },
   computed:{
+    UserFilled() {
+      return UserFilled
+    },
     Edit() {
       return Edit
     },
@@ -81,9 +187,117 @@ export default {
       this.userSocialInfo = res.data.data
     })
   },
-  methods() {
+  methods: {
+    handleExceed(files) {
+      this.$refs.upload.clearFiles();
+      const file = files[0];
+      file.uid = genFileId(); // 注意：检查genFileId是否适用于Element UI
+      console.log('文件', file)
+      this.$refs.upload.handleStart(file);
+    },
+    submitUpload() {
+      this.$refs.upload.submit();
+    },
+    successUpload(response, file, fileList){
+      // 上传文件并接收返回的响应参数
+        console.log('上传成功', response)
+        if (response.code === 200) {
+          this.$message.success('上传成功')
+          this.isShowDrawer = false
+          this.user.avatar=response.data
+        }
+    },
+    cancelClick() {
+      this.isShowDrawer = false
+    }
+  },
+    validatePasswordMatch(rule, value, callback){
+      if (value !== this.passwordForm.newPassword) {
+        callback(new Error('两次输入的密码不一致'));
+      } else {
+        callback();
+      }
+    },
+    changeUsername(){
+       // this.$axios.get("/user/changeUsername",{
+       //   params:{
+       //    id: this.user.id,
+       //    name: null
+       //   }
+       // }).then(res => {
+       //   if(res.data.code === 200){
+       //      this.$message.success('用户名修改成功');
+       //
+       //    }else{
+       //      this.$message.error('用户名修改失败');
+       //    }
+       // })
 
-  }
+    },
+    submitPasswordChange() {
+      this.$refs.passwordFormRef.validate(valid => {
+        if (valid) {
+          // 提交修改密码的逻辑
+          this.$axios.get("/user/changePassword",{params:{
+            oldPassword: this.passwordForm.oldPassword,
+            newPassword: this.passwordForm.newPassword,
+            }
+          })
+          .then(res => {
+            if(res.data.code === 200){
+              this.$message.success('密码修改成功');
+            }else if (res.data.code===501){
+              this.$message.error('原密码错误');
+            }else{
+              this.$message.error('密码修改失败');
+            }
+          })
+          .catch(error => {
+            console.error('密码修改失败', error);
+          })
+          this.showChangePasswordDialog = false;
+          this.passwordForm = {
+            oldPassword: '',
+            newPassword: '',
+            confirmPassword: '',
+          };
+          // this.$message.success('密码修改成功');
+        } else {
+          console.log('error submit!!');
+          return false;
+        }
+      });
+    },
+     submitUsernameChange() {
+      this.$refs.usernameFormRef.validate(valid => {
+        if (valid) {
+          // 提交修改用户名的逻辑
+          this.$axios.get('/user/changeName', {
+            params:{
+              id: this.user.id,
+            username: this.usernameForm.newUsername,
+            }
+          }).then(response => {
+            if (response.data.code === 200) {
+              this.user.account = this.usernameForm.newUsername;
+              this.$message({
+                message: '用户名修改成功',
+                type: 'success',
+              });
+              this.showChangeUsernameDialog = false;
+            } else {
+              this.$message.error('用户名修改失败，请检查输入或联系管理员');
+            }
+          }).catch(error => {
+            console.error('Error updating username:', error);
+            this.$message.error('用户名修改失败，请检查网络或稍后再试');
+          });
+        } else {
+          console.log('error submit!!');
+          return false;
+        }
+      });
+    },
 }
 </script>
 <style scoped>
@@ -102,12 +316,40 @@ export default {
   margin-bottom: 20px;
 }
 
+.avatar-container {
+  position: relative;
+  display: inline-block;
+}
 .avatar {
   width: 150px;
   height: 150px;
   border-radius: 50%;
   object-fit: cover;
-  margin-right: 20px;
+  transition: opacity 0.3s ease-in-out;
+  z-index: 1;
+}
+.mask {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  transition: opacity 0.3s ease-in-out;
+  z-index: 99;
+}
+
+.mask:hover {
+  background: rgba(0, 0, 0, 0.49);
+}
+
+.edit-icon {
+  color: white;
+  font-size: 24px;
 }
 
 .user-info {
