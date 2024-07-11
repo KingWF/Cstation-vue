@@ -1,13 +1,10 @@
 <template>
-  <div v-if="show"
-       class="item-box">
+  <div v-if="show" class="item-box">
     <el-row>
-      <img :src="video.cover"
-           class="cover">
+      <img :src="video.cover" class="cover">
     </el-row>
     <el-row class="play-icon">
-      <img src="@/assets/play.png"
-           class="rec-list-play" @click="play(video.id)">
+      <img src="@/assets/play.png" class="rec-list-play" @click="play(video.id)">
     </el-row>
     <p class="title">{{video.title}}</p>
     <p style="position: relative;top: -30px;">
@@ -42,18 +39,20 @@ export default {
 .item-box {
   width: 100%;
   position: relative;
-
+  padding: 10px;
 }
 .cover {
-  width: 100%;
-  height: auto;
+  width: 80%;
+  height: 140px;
   border: 1px solid gainsboro;
   border-radius: 15px;
 }
 .play-icon {
+  width: 240px;
+  height: 140px;
   position: absolute;
-  top: 0px;
-  left: 0px;
+  top: 10px;
+  left: 10px;
 }
 .rec-list-play {
   width: 100%;
@@ -63,7 +62,7 @@ export default {
   transform: scale(1.1);
 }
 .title {
-  margin-bottom: 15px;
+  margin-top: 10px;
   font-weight: bold;
   white-space: nowrap; /* 强制文本不换行 */
   overflow: hidden; /* 隐藏溢出的内容 */
