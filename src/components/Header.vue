@@ -191,7 +191,18 @@
           <el-col :span="20" :offset="2">
             <el-input placeholder="账号" style="margin-bottom: 20px;" v-model="user.account"></el-input>
             <el-input placeholder="密码" style="margin-bottom: 20px;" v-model="user.password" show-password></el-input>
+
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="6" :offset="2">
             <el-button type="success" style="width: 100px;" @click="login">登录</el-button>
+          </el-col>
+          <el-col :span="6" :offset="2">
+            <el-button type="success" plain style="width: 100px;" ><a href="/faceSearch" style="color:#40a9ff;"> 人脸识别登录</a></el-button>
+          </el-col>
+          <el-col :span="6" :offset="2">
+            <el-button type="success" plain style="width: 100px;" @click="register">注册</el-button>
           </el-col>
         </el-row>
       </div>
@@ -327,6 +338,24 @@ export default {
           this.$emit("loginSuccess")
         }
       })
+    },
+    register(){
+      if(this.user.account == '' || this.user.password == ''){
+        this.$message.error("账号或密码不能为空")
+        return
+      }else{
+        this.$axios.post("user/register", this.user).then(res =>{
+          console.log(res)
+          if(res.data.code == 200){
+            this.$message.success("注册成功")
+            // 隐藏注册的对话框
+            this.dialogVisible = false
+          }
+          else if(res.data.code == 400){
+            this.$message.error(res.data.message)
+          }
+        })
+      }
     },
     checkState(){
       // 判断本地是否有用户信息

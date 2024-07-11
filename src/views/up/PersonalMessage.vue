@@ -39,6 +39,17 @@
           <span class="stat-label">视频</span>
         </div>
       </section>
+      <section class="details-section">
+        <h2>人脸信息</h2>
+
+        <ul>
+          <li><strong>
+            <el-tag type="success" v-if="isRegister">已注册人脸</el-tag>
+            <el-tag type="danger" v-else @click="this.$router.push('/faceAdd')">未注册人脸</el-tag>
+            </strong> </li>
+        </ul>
+      </section>
+
     </main>
     <el-drawer v-model="isShowDrawer" :direction="direction">
       <template #header>
@@ -124,12 +135,14 @@ import {ElMessageBox, genFileId} from "element-plus";
 export default {
   data() {
     return {
+      isRegister:false,
       user: {
         account: '',
         avatar:'',
         id:0,
         level:'',
         password:'',
+
       },
       userSocialInfo:{
       },
@@ -185,6 +198,16 @@ export default {
     this.$axios.get("user/getUserSocialInfo").then(res => {
       console.log(res.data.data)
       this.userSocialInfo = res.data.data
+    })
+  //   判断是否注册人脸
+    this.$axios.get("faceIdentify/isRegisterFace").then(res => {
+      console.log('是否注册人脸',res.data)
+      if(res.data){
+        this.isRegister=true
+      }
+      else {
+        this.isRegister=false
+      }
     })
   },
   methods: {

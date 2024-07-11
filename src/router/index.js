@@ -30,6 +30,21 @@ const router = createRouter({
       component: () => import('../views/History.vue')  // 在访问页面时才导入
     },
     {
+      path: '/faceAdd',
+      name: 'faceAdd',
+      component: () => import('../views/FaceId/FaceAdd.vue')
+    },
+    {
+      path: '/faceImg',
+      name: 'faceImg',
+      component: () => import('../views/FaceId/FaceImg.vue')
+    },
+    {
+      path: '/faceSearch',
+      name: 'faceSearch',
+      component: () => import('../views/FaceId/FaceSearch.vue')
+    },
+    {
       path: '/upPersonal',
       name: 'upPersonal',
       component: () => import('../views/up/UpPersonal.vue'),
@@ -79,6 +94,7 @@ const router = createRouter({
           name: 'myMessage',
           component: () => import('../views/up/MyMessage.vue')
         },
+
       ]  
     },
     {
