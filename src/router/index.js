@@ -23,10 +23,11 @@ const router = createRouter({
       component: () => import('../views/SearchVideo.vue')  // 在访问页面时才导入
     },
     {
-      path: '/chat',  // 动态路由：可以用来传参  id：变量名
-      name: 'chat',
+      // 播放历史界面
+      path: '/history',  // 动态路由：可以用来传参  id：变量名
+      name: 'history',
       // 路由懒加载：需要时再加载，不是提前就加载好
-      component: () => import('../views/chat.vue')  // 在访问页面时才导入
+      component: () => import('../views/History.vue')  // 在访问页面时才导入
     },
     {
       path: '/upPersonal',
@@ -37,6 +38,16 @@ const router = createRouter({
           path: 'videoManage',  // 二级路由的path不能以/开头，只写字符串就行
           name: 'upVideoManage',
           component: () => import('../views/up/VideoManage.vue')
+        },
+        {
+          path: 'personalFun',  // 二级路由的path不能以/开头，只写字符串就行
+          name: 'personalFun',
+          component: () => import('../views/up/PersonalFun.vue')
+        },
+        {
+          path: 'personalMessage',  // 二级路由的path不能以/开头，只写字符串就行
+          name: 'personalMessage',
+          component: () => import('../views/up/PersonalMessage.vue')
         },
         {
           path: 'message',
@@ -57,7 +68,12 @@ const router = createRouter({
           path:'editVideo/:vid',
           name:'editVideo',
           component:()=>import('@/views/up/EditVideo.vue')
-        }
+        },
+        {
+          path: 'myMessage',  // 二级路由的path不能以/开头，只写字符串就行
+          name: 'myMessage',
+          component: () => import('../views/up/MyMessage.vue')
+        },
       ]  
     },
     {

@@ -4,13 +4,13 @@
   </el-row>
   <el-row style="margin-top: 15px;">
     <el-col :span="8">
-      <el-input placeholder="弹幕内容"
+      <el-input placeholder="非实时弹幕内容"
                 v-model="damuContent"></el-input>
     </el-col>
     <el-col :span="1">
       <el-button color="#409eff"
                  plain
-                 @click="sendDanmu">发弹幕</el-button>
+                 @click="sendDanmu" @keyup.enter="sendDanmu">发弹幕</el-button>
     </el-col>
   </el-row>
   <el-row style="margin-top: 15px;">
@@ -21,7 +21,7 @@
     <el-col :span="1">
       <el-button color="#409eff"
                  plain
-                 @click="send">发弹幕</el-button>
+                 @click="send" @keyup.enter="send">发弹幕</el-button>
     </el-col>
   </el-row>
 </template>
