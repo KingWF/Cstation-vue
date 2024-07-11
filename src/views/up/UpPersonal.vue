@@ -8,7 +8,7 @@
         <el-aside width="200px" style="height: 600px">
           <!-- 菜单 -->
           <el-scrollbar>
-            <el-menu v-model="menuActiveIndex">
+            <el-menu :default-active="menuActiveIndex">
               <el-menu-item index="1" @click="$router.push('/upPersonal/videoManage')">
                 <el-icon><VideoCamera/></el-icon>
                 视频管理</el-menu-item>
@@ -58,7 +58,10 @@ export default {
       if (path.includes("message")) {
         this.menuActiveIndex = "2";
       }
-      if (path.includes("myMessage")) {
+      if(path.includes("personalFun")){
+        this.menuActiveIndex = "4";
+      }
+      if (path.includes("personalMessage")) {
         this.menuActiveIndex = "5";
       }
     },
