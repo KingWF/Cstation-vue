@@ -22,8 +22,8 @@
           <el-table-column prop="reason" label="投诉内容" width="180" align="center"/>
           
           <el-table-column label="操作" align="center" #default="scoped">
-            <el-button type="danger" @click="lock(scoped)">不通过</el-button>
-            <el-button type="success" @click="pass(scoped)">通过</el-button>
+            <el-button type="danger" @click="handle(scoped);this.state='report_reject'">不通过</el-button>
+            <el-button type="success" @click="handle(scoped);this.state='report_pass'">通过</el-button>
           </el-table-column>
         </el-table>
       </el-row>
@@ -79,26 +79,13 @@
           this.reportList = resPage.data
         })
       },
-      lock(scoped){
+      handle(scoped){
         console.log(scoped)
         // 引用传递
         let report = scoped.row
-        this.$axios.get("report/lock/" + report.id).then(res => {
+        this.$axios.put("report/" + report.id+"/"+this.state).then(res => {
           if(res.data.code == 200){
-            this.$message.success("审核不通过")
-            // 更新页面
-            this.getData()
-            //
-          }
-        })
-      },
-      pass(scoped){
-        console.log(scoped)
-        // 引用传递
-        let report = scoped.row
-        this.$axios.get("report/pass/" + report.id).then(res => {
-          if(res.data.code == 200){
-            this.$message.success("审核通过")
+            this.$message.success("审核成功")
             // 更新页面
             this.getData()
             //
