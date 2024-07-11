@@ -50,6 +50,11 @@ const router = createRouter({
           component: () => import('../views/up/PersonalMessage.vue')
         },
         {
+          path: 'personalCollect',  // 二级路由的path不能以/开头，只写字符串就行
+          name: 'personalCollect',
+          component: () => import('../views/up/PersonalCollect.vue')
+        },
+        {
           path: 'message',
           name: 'message',
           component: () => import('../views/up/Message.vue')
