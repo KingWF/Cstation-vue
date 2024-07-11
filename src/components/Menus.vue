@@ -16,7 +16,7 @@
       </el-col>
 
       <!-- 分类 -->
-      <el-col :span="16" :offset="1">
+      <el-col :span="16" >
         <el-row v-for="(menus, i) in menuList" :key="i" style="margin-bottom: 5px;">
           <el-button v-for="(name, j) in menus" :key="j" style="width: 62px;">{{name}}</el-button>
         </el-row>

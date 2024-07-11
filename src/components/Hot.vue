@@ -1,19 +1,19 @@
 <template>
   <div>
-    <el-row :gutter="10">
+    <el-row>
       <!-- 轮播图 -->
-      <el-col :span="10">
-        <el-carousel height="300px">
+      <el-col :span="10" style="height: 440px; ">
+        <el-carousel height="400px" style="border-radius: 30px">
           <el-carousel-item v-for="item in carousels" :key="item">
-            <el-image style="width: 100%; height: 100%" :src="item.cover" fit="contain" />
+            <el-image style="width: 100%; height: 440px" :src="item.cover" fit="fill" />
           </el-carousel-item>
         </el-carousel>
       </el-col>
 
       <!-- 推荐视频 -->
       <el-col :span="14">
-        <el-row :gutter="15">
-          <el-col :span="8" v-for="abc in videoList" :key="abc">
+        <el-row style="height: 440px;margin-left: 40px" >
+          <el-col :span="8" v-for="abc in videoList" :key="abc" style="height: 220px">
             <VideoItem :video="abc"></VideoItem>
           </el-col>
         </el-row>
@@ -28,6 +28,7 @@ export default{
   // data里面必须返回一个对象，对象中就写当前页面的属性
   data(){
     return {
+      // 轮播图数据
       carousels:[
         {
           id: 1001,
@@ -50,7 +51,9 @@ export default{
           cover: "https://cdjava96.oss-cn-chengdu.aliyuncs.com/c4.png"
         }
       ],
-      videoList: []
+      // 视频数据
+      videoList: [],
+
     }
   },
   mounted(){

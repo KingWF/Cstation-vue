@@ -21,7 +21,7 @@
         </ul>
       </section>
       <section class="stats-section">
-        <h2>统计信息</h2>
+        <h2>社交信息</h2>
         <div class="stat-item">
           <span class="stat-count">{{ userSocialInfo[0] }}</span>
           <span class="stat-label">关注</span>

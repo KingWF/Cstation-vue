@@ -2,19 +2,24 @@
   <div>
     <!-- 1.header：logo、搜索、头像 -->
     <!-- 3.使用组件 -->
-    <Header @loginSuccess="loginSuccess"></Header>
+    <Header @loginSuccess="loginSuccess" ></Header>
 
-    <el-row>
-      <el-col :span="20" :offset="2">
+    <div class="container">
+      <div style="width: 100%;display: flex;flex-direction: column;padding: 20px;">
         <!-- 2.菜单 -->
-        <Menus></Menus>
-
+        <div style="width: 100%;">
+          <Menus></Menus>
+        </div>
         <!-- 3.轮播图、热门视频 -->
-        <Hot></Hot>
-
+        <div style="width: 100%;margin: 10px;">
+          <Hot></Hot>
+        </div>
         <!-- 4.其它视频的列表 -->
-      </el-col>
-    </el-row>
+        <div style="width: 100%;margin: 10px">
+          <RecommendVideo></RecommendVideo>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -24,6 +29,7 @@ import { RouterLink} from 'vue-router'
 import Header from '../components/Header.vue'
 import Menus from '../components/Menus.vue'
 import Hot from '../components/Hot.vue'
+import RecommendVideo from "@/components/RecommendVideo.vue";
 
 export default{
   // 写事件函数，例如点击、双击、change事件等等
@@ -33,6 +39,7 @@ export default{
     }
   },
   components:{
+    RecommendVideo,
     // 2.注册组件
     Header,
     Menus,
@@ -42,5 +49,8 @@ export default{
 </script>
 
 <style scoped>
-
+.container{
+width: 100%;
+//margin-top: 60px;
+}
 </style>
