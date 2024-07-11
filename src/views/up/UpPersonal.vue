@@ -2,7 +2,7 @@
   <div>
     <el-container>
       <el-header style="padding: 0 ;">
-        <Header :hideLogo="hideLogo" :topColor="topColor" :keepSearchKey="searchKey" :enableSearch="enableSearch"></Header>
+        <Header :hideLogo="hideLogo" :topColor="topColor"  :enableSearch="enableSearch"></Header>
       </el-header>
       <el-container class="up-container" >
         <el-aside width="200px" style="height: 600px;">
@@ -15,13 +15,13 @@
               <el-menu-item index="2" @click="$router.push('/upPersonal/message')">
                 <el-icon><Message/></el-icon>
                 我的消息</el-menu-item>
-              <el-menu-item index="3">
+              <el-menu-item index="3" @click="$router.push('/upPersonal/videoManage')">
                 <el-icon><Star/></el-icon>
                 我的收藏</el-menu-item>
-              <el-menu-item index="4">
+              <el-menu-item index="4" @click="$router.push('/upPersonal/personalFun')">
                 <el-icon><Avatar/></el-icon>
                 我的粉丝</el-menu-item>
-              <el-menu-item index="5">
+              <el-menu-item index="5" @click="$router.push('/upPersonal/personalMessage')">
                 <el-icon><Setting/></el-icon>
                 个人信息</el-menu-item>
             </el-menu>
@@ -54,8 +54,8 @@ export default{
   data(){
     return{
       menuActiveIndex: "1",
-      hideLogo: false,
-      hideSearch: false,
+      hideLogo: true,
+      hideSearch: true,
       topColor: '#0e6ec9',
       enableSearch:true
     }

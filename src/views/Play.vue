@@ -39,7 +39,8 @@
                   v-if="video!=null && danmuList!=null" 
                   :video="video" 
                   :danmuList="danmuList" 
-                  @ended="playEnd"></MyVideo>
+                  @ended="playEnd"
+                ></MyVideo>
               </el-col>
               <!-- 评论列表 -->
               <el-col :span="8">
@@ -131,7 +132,6 @@ export default{
     }
   },
   mounted(){
-
     // 发请求获取当前视频的信息
     this.$axios.get("video/findById/" + this.vid).then(res => {
       console.log(res.data)
@@ -168,6 +168,10 @@ export default{
         //
         this.key = res.data.data
       })
+    })
+    // 新增用户访问记录
+    this.$axios.get("history/addHistoryRecord/" + this.vid).then(res => {
+      console.log('访问情况',res.data)
     })
     // 发请求获取当前视频的弹幕列表
     this.$axios.get("danmu/findByVid/" + this.vid).then(res => {

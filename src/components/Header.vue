@@ -1,5 +1,5 @@
 <template>
-  <div class="image-container" v-if="hideLogo" @click="backHome">
+  <div class="image-container" v-if="!hideLogo" @click="backHome">
     <div>
       <img :src="imgSrc" alt="Background Image" class="home-img">
       <div class="logo">
@@ -15,14 +15,14 @@
       <!-- 列 span：指定当前el-col占用多少列-->
       <el-col :span="10">
         <ul class="menu">
-          <li><a href="#">首页</a></li>
+          <li><a href="/">首页</a></li>
           <li><a href="#">番剧</a></li>
           <li><a href="#">直播</a></li>
           <li><a href="#">游戏中心</a></li>
           <li><a href="#">会员购</a></li>
           <li><a href="#">漫画</a></li>
           <li><a href="#">赛事</a></li>
-          <li><a href="#">欧洲杯</a></li>
+          <li><a href="https://cn.bing.com/sportsdetails?q=%E6%AC%A7%E6%B4%B2%E6%9D%AF&sport=Soccer&scenario=League&TimezoneId=China%20Standard%20Time&league=Soccer_InternationalEuroCup&intent=Generic&seasonyear=2024&segment=sports&isl2=true&">欧洲杯</a></li>
           <li><a href="#">周年庆</a></li>
         </ul>
       </el-col>
@@ -36,7 +36,7 @@
             placeholder="输入搜索内容~"
             :prefix-icon="Search"
             @keyup.enter="onSearch()"
-            :disabled="enableSearch"
+            :disabled="!enableSearch"
         />
       </el-col>
 
@@ -146,7 +146,7 @@
             <el-icon color="white" size="25px"><View /></el-icon>
             <div style="color: white;">动态</div>
           </div>
-          <div class="meau-right">
+          <div class="meau-right" @click="toPage('/history')">
             <el-icon color="white" size="25px"><Clock /></el-icon>
             <div style="color: white;">历史</div>
           </div>
@@ -253,7 +253,7 @@ export default {
   props:{
     hideLogo: {
       type: Boolean,
-      default: true // 默认值为 false
+      default: false // 默认值为 false
     },
     topColor: {
       type: String,
@@ -265,7 +265,7 @@ export default {
     },
     enableSearch:{
       type: Boolean,
-      default: false
+      default: true
     }
 
   },
