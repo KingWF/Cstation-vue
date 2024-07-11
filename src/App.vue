@@ -2,6 +2,7 @@
 <script>
 // 导入第三插件、其它页面、写当前页面中的事件
 import { RouterLink, RouterView } from 'vue-router'
+import '@fortawesome/fontawesome-free/css/all.min.css';
 
 export default{
   data(){
