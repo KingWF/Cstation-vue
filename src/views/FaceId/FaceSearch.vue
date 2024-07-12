@@ -1,42 +1,50 @@
 <template>
-  <el-row class="base">
-    <div class="camera" v-if="isShow">
-      <video id="videoCamera" autoplay ></video>
-      <div >
-        <canvas
-            style="display: none"
-            id="canvasCamera"
-            :width="videoWidth"
-            :height="videoHeight"
+  <div class="baseMainDown">
+    <el-image src="/src/assets/static/015c145da813afa801209e1fbc0a3a.png@2o.png" :style="imageStyle" />
+  </div>
+  <div class="baseMainOver">
+    <div class="base">
+      <div class="camera" v-if="isShow">
+        <video id="videoCamera" autoplay style="height:379px;width:450px;border-radius: 50%"></video>
+        <div >
+          <canvas
+              style="display: none;border-radius: 50%"
+              id="canvasCamera"
+              :width="videoWidth"
+              :height="videoHeight"
 
-        ></canvas>
+          ></canvas>
+        </div>
+      </div>
+      <div class="face-img" v-else>
+        <img :src="imgSrc" alt="" />
       </div>
     </div>
-    <div class="face-img" v-else>
-      <img :src="imgSrc" alt="" />
-    </div>
-  </el-row>
-  <el-row justify="center" style="margin-top: 30px">
-    <button @click="handlePhotograph" v-if="isShow">拍照</button>
-    <button v-else @click="restartPhoto">重新拍照</button>
-  </el-row>
-  <el-row style="display: flex;flex-direction: column;justify-content: center;align-items: center" v-if="isShowImg">
-    <div style="margin-top: 30px;justify-content: center">
-      <el-image :src="SearchFaceUser.avatar" style="width: 300px;height: 300px;border-radius: 50%"></el-image>
-    </div>
-    <div  style="margin-top: 30px;justify-content: center">
-      用户账号：<span style="color: #409eff">{{SearchFaceUser.account}}</span>
-    </div>
-    <div style="margin-top: 30px">
-      <el-button type="primary" @click="login">确认登录</el-button>
-    </div>
-  </el-row>
+  </div>
+  <div class="baseBtn">
+    <el-button @click="handlePhotograph" v-if="isShow">拍照</el-button>
+    <el-button v-else @click="restartPhoto">重新拍照</el-button>
+  </div>
+  <div class="baseImg">
+    <el-row style="display: flex;flex-direction: column;justify-content: center;align-items: center" v-if="isShowImg">
+      <div style="margin-top: 30px;justify-content: center">
+        <el-image :src="SearchFaceUser.avatar" style="width: 280px;height: 280px;border-radius: 50%"></el-image>
+      </div>
+      <div  style="margin-top: 30px;justify-content: center ;background:#1e1f22;width: 300px;height: 30px">
+        <span style="color:#ffffff;">用户账号：</span><span style="color: #409eff">{{SearchFaceUser.account}}</span>
+      </div>
+    </el-row>
+  </div>
+  <div class="baseBtn2">
+    <el-button plain type="success" @click="login">确认登录</el-button>
+  </div>
 </template>
 
 <script>
 export default {
   data() {
     return {
+      windowHeight: 0,
       isShow:true,
       videoWidth: 300,
       videoHeight: 200,
@@ -50,9 +58,16 @@ export default {
 
   components: {},
 
-  computed: {},
+  computed: {
+    imageStyle() {
+      return { 'width': '100%', 'height': `${this.windowHeight}px` };
+    },
+  },
 
   mounted() {
+    // 获取页面高度
+    this.updateWindowDimensions();
+    window.addEventListener('resize', this.updateWindowDimensions);
     this.getDevices().then(res => {
       if (res.length) {
         this.cameraList = res;
@@ -61,8 +76,13 @@ export default {
       this.main();
     });
   },
-
+  beforeDestroy() {
+    window.removeEventListener('resize', this.updateWindowDimensions);
+  },
   methods: {
+    updateWindowDimensions() {
+      this.windowHeight = window.innerHeight;
+    },
     // 登录账号并进入首页
     login(){
       // 发请求进行直接登录
@@ -73,7 +93,7 @@ export default {
           // 将用户信息、token信息保存到本地
           let user = res.data.data
           let token = res.headers.authorization
-          
+
           // 更新浏览器缓存的用户信息
           window.localStorage.setItem("user", JSON.stringify(user))
           window.localStorage.setItem("token", token)
@@ -206,6 +226,16 @@ export default {
 };
 </script>
 <style scoped>
+.baseMainDown{
+  position: relative;
+}
+.baseMainOver{
+  position: absolute;
+  top: 50%;
+  left: 28.8%;
+  transform: translate(-50%, -50%);
+}
+
 .base{
   display:flex;
   justify-content: center;
@@ -213,21 +243,43 @@ export default {
   flex-direction: column;
 }
 .camera{
-  width: 600px;
-  height: 400px;
-  border-radius: 50%;
+  //width: 400px;
+  //height: 400px;
+  //border-radius: 50%;
   display:flex;
   justify-content: center;
   flex-direction: column;
+  //overflow: hidden;
 }
 .face-img{
-  width: 600px;
-  height: 400px;
+  height:400px;
+  width:400px;
+
   display:flex;
   justify-content: center;
   img{
     width: 100%;
     height: 100%;
+    border-radius: 50%;
   }
 }
+.baseBtn{
+  position: absolute;
+  top: 88%;
+  left: 28.8%;
+  transform: translate(-50%, -50%);
+}
+.baseBtn2{
+  position: absolute;
+  top: 88%;
+  right: 22%;
+  transform: translate(-50%, -50%);
+}
+.baseImg{
+  position: absolute;
+  top: 48%;
+  left: 71.5%;
+  transform: translate(-50%, -50%);
+}
+
 </style>
