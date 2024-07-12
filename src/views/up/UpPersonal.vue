@@ -12,7 +12,7 @@
               <el-menu-item index="1" @click="$router.push('/upPersonal/videoManage')">
                 <el-icon><VideoCamera/></el-icon>
                 视频管理</el-menu-item>
-              <el-menu-item index="2" @click="$router.push('/upPersonal/message')">
+              <el-menu-item index="2" @click="$router.push('/upPersonal/myMessage')">
                 <el-icon><Message/></el-icon>
                 我的消息</el-menu-item>
               <el-menu-item index="3" @click="$router.push('/upPersonal/personalCollect')">

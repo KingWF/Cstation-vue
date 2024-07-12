@@ -148,7 +148,7 @@
             <el-icon color="white" size="25px"><View /></el-icon>
             <div style="color: white;">动态</div>
           </div>
-          <div class="meau-right" @click="toPage('/history')">
+          <div class="meau-right" @click="this.$router.push('/history')">
             <el-icon color="white" size="25px"><Clock /></el-icon>
             <div style="color: white;">历史</div>
           </div>
