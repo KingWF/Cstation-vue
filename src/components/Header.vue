@@ -107,19 +107,19 @@
                 </el-col>
               </el-row>
 <!--              个人中心-->
-              <el-row style="margin:15px 0 15px 0" @click="toPage('/upPersonal')">
+              <el-row style="margin:15px 0 15px 0" @click="toPage(`/videoManage`)">
                 <el-col :span="4"><el-icon size="25"><User /></el-icon></el-col>
                 <el-col :span="18" style="font-size: 18px">个人中心</el-col>
                 <el-col :span="2"><el-icon size="20"><ArrowRight /></el-icon></el-col>
               </el-row>
 <!--              投稿管理-->
-              <el-row style="margin:15px 0 15px 0" @click="toPage('/upPersonal')">
+              <el-row style="margin:15px 0 15px 0" @click="toPage(``)">
                 <el-col :span="4"><el-icon size="25"><VideoPlay /></el-icon></el-col>
                 <el-col :span="18" style="font-size: 18px">投稿管理</el-col>
                 <el-col :span="2"><el-icon size="20"><ArrowRight /></el-icon></el-col>
               </el-row>
 <!--              推荐服务-->
-              <el-row style="margin:15px 0 15px 0" @click="toPage('/upPersonal')">
+              <el-row style="margin:15px 0 15px 0" @click="toPage(``)">
                 <el-col :span="4"><el-icon size="25"><Star /></el-icon></el-col>
                 <el-col :span="18" style="font-size: 18px">推荐服务</el-col>
                 <el-col :span="2"><el-icon size="20"><ArrowRight /></el-icon></el-col>
@@ -291,6 +291,16 @@ export default {
   methods:{
     // 跳转页面
     toPage(path){
+      const user = JSON.parse(window.localStorage.getItem("user"))
+      let url = ''
+      if(user){
+        if(user.role == 'up'){
+          url = '/upPersonal'
+        }else{
+          url= '/adminPersonal'
+        }
+      }
+      path = url + path
       this.$router.push(path)
     },
     // 返回首页
