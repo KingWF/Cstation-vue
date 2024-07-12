@@ -54,6 +54,7 @@ export default {
     return {
       videoList:[],
       tableData: [],
+      searchData:[],
       search: '',
       handleEdit: '',
       selectVid:0
@@ -68,23 +69,28 @@ export default {
       this.$axios.get("review/findReviewByVid/"+this.selectVid).then(res => {
         console.log('表格数据',res.data.data)
         this.tableData = res.data.data
+        this.searchData = res.data.data
       })
     })
   },
   methods: {
     searchTable() {
-      console.log('触发搜索',this.search)
-        let filteredData = this.tableData.filter(data =>
+      if(this.search===''){
+        this.tableData = this.searchData
+      }else{
+        let filteredData = this.searchData.filter(data =>
             !this.search ||
-            data.title.toLowerCase().includes(this.search.toLowerCase())
+            data.content.toLowerCase().includes(this.search.toLowerCase())
         );
-        this.$set(this, 'tableData', filteredData);
+        this.tableData = filteredData
+      }
     },
     handleChange(){
       console.log("选择的视频",this.selectVid)
       this.$axios.get("review/findReviewByVid/"+this.selectVid).then(res => {
         console.log('表格数据',res.data.data)
         this.tableData = res.data.data
+        this.searchData = res.data.data
       })
     },
     handleDelete(index){
