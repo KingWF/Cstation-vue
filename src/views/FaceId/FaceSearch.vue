@@ -41,6 +41,8 @@
 </template>
 
 <script>
+import {ElMessage} from "element-plus";
+
 export default {
   data() {
     return {
@@ -199,6 +201,7 @@ export default {
       this.isShow= false;
 
       this.$axios.post("faceIdentify/searchFace", {image:this.imgSrc.replace(/^data:image\/\w+;base64,/, '')}).then(res => {
+        if(res.data.code===200){
           let user_id = res.data.data.result.userList[0].userId
           let score = res.data.data.result.userList[0].score
           if(score > 80){
@@ -214,6 +217,9 @@ export default {
           }
           console.log('识别结果uid',res.data.result.user_list[0].user_id)
           console.log('识别分数',res.data.result.user_list[0].score)
+        }else{
+         ElMessage.error(res.data.message)
+        }
         })
 
     },
