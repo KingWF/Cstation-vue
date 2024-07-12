@@ -51,12 +51,12 @@ export default{
     handleScroll() {
       const scrollPosition = window.scrollY + window.innerHeight;
       const documentHeight = document.documentElement.scrollHeight;
-      const threshold = 50;
+      const threshold = 18;
 
       if (scrollPosition + threshold >= documentHeight && !this.loadingMore) {
         this.loadingMore = true; // 标记为正在加载更多
         console.log('触底了！');
-        this.loadMoreContent();
+        //this.loadMoreContent();
       }
     },
     async loadMoreContent() {
