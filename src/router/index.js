@@ -45,6 +45,11 @@ const router = createRouter({
       component: () => import('../views/FaceId/FaceSearch.vue')
     },
     {
+      path:'/currentChatRoom',
+      name:'currentChatRoom',
+      component:()=>import('../views/CurrentChatRoom.vue')
+    },
+    {
       path: '/upPersonal',
       name: 'upPersonal',
       component: () => import('../views/up/UpPersonal.vue'),
