@@ -56,23 +56,20 @@ export default{
       if (scrollPosition + threshold >= documentHeight && !this.loadingMore) {
         this.loadingMore = true; // 标记为正在加载更多
         console.log('触底了！');
-        //this.loadMoreContent();
+        this.loadMoreContent();
       }
     },
     async loadMoreContent() {
-      let recommend;
       // 模拟异步加载数据
       await new Promise(resolve =>
       this.$axios.get("video/findNew").then(res => {
-        recommend = res.data.data
-
+          this.videoList.push(...res.data.data);
+        this.loadingMore = false;
       })
       );
-      // 更新数据
-      this.recommendVideo.push(...recommend); // 假设newItems是从服务器获取的新数据
 
       // 数据加载完成后，重置loadingMore标志
-      this.loadingMore = false;
+
     },
   },
   components:{
