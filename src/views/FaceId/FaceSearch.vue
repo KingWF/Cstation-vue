@@ -73,6 +73,8 @@ export default {
           // 将用户信息、token信息保存到本地
           let user = res.data.data
           let token = res.headers.authorization
+          
+          // 更新浏览器缓存的用户信息
           window.localStorage.setItem("user", JSON.stringify(user))
           window.localStorage.setItem("token", token)
           this.$router.push("/")

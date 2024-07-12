@@ -31,6 +31,8 @@
 </template>
 
 <script>
+import {ElMessage} from "element-plus";
+
 export default {
   data() {
     return {
@@ -164,6 +166,16 @@ export default {
           }
       );
     },
+    disableCamera() {
+      const stream = this.thisVideo.srcObject;
+      if (stream) {
+        const tracks = stream.getTracks();
+        tracks.forEach(track => {
+          track.stop();
+        });
+        this.thisVideo.srcObject = null;
+      }
+    },
     // 拍照
     handlePhotograph() {
       this.thisContext.drawImage(this.thisVideo, 0, 0, 300, 200);
@@ -178,17 +190,22 @@ export default {
 
       this.$axios.post("faceIdentify/addFace", {image:this.imgSrc.replace(/^data:image\/\w+;base64,/, ''),user_id:user.id,user_info:'新增人脸'
       }).then(res => {
-        console.log('token',res.data)
-
-        if(res.data.error_code==0){
-          // 更改数据库人脸状态
-          this.$axios.get("faceIdentify/changeFaceStatus", ).then(res => {
-            this.ifShowAlert=true
-            setTimeout(() => {
-              this.ifShowAlert=false
-              this.$router.push('/upPersonal/personalMessage')
-            },2000)
-          })
+        console.log('addResult',res.data)
+        if(res.data.message=='true'){
+          if(res.data.data.error_code==0){
+            // 更改数据库人脸状态
+            this.$axios.get("faceIdentify/changeFaceStatus", ).then(res => {
+              this.ifShowAlert=true
+              setTimeout(() => {
+                this.ifShowAlert=false
+                this.$router.push('/upPersonal/personalMessage')
+              },2000)
+            })
+          }else{
+            ElMessage.error('人脸录入失败!')
+          }
+        }else{
+         ElMessage.warning('该人脸已绑定账号，请使用该人脸进行登录！')
         }
       })
     },

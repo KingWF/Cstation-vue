@@ -228,6 +228,10 @@ export default {
           this.$message.success('上传成功')
           this.isShowDrawer = false
           this.user.avatar=response.data
+        //   重新查询用户信息并赋值给浏览器缓存
+          this.$axios.get("user/getUserInfo").then(res => {
+            window.localStorage.setItem("user", JSON.stringify(res.data.data))
+          })
         }
     },
     cancelClick() {
