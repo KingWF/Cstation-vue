@@ -96,14 +96,13 @@ const router = createRouter({
         },
         {
           path:'personalMessage',
-          name:'personalMessage',
-          component:()=>import('@/views/up/PersonalMessage.vue')
+          name: 'personalMessage',
+          component: () => import('../views/up/PersonalMessage.vue')
         }
-
       ]  
     },
     {
-      path: '/adminPersonal',  // 动态路由：可以用来传参  id：变量名
+      path: '/adminPersonal',
       name: 'adminPersonal',
       // 路由懒加载：需要时再加载，不是提前就加载好
       component: () => import('../views/admin/AdminPersonal.vue'),
