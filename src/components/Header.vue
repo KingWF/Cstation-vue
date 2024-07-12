@@ -317,6 +317,7 @@ export default {
         console.log(res)
         if(res.data.code == 200){
           this.$message.success("登录成功")
+          console.log("用戶信息", res.data.data)
           // 将用户信息、token信息保存到本地
           let user = res.data.data
           let token = res.headers.authorization

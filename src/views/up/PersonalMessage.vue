@@ -103,7 +103,7 @@
     <template #footer>
       <span class="dialog-footer">
         <el-button @click="showChangeUsernameDialog = false">取消</el-button>
-        <el-button type="primary" @click="submitUsernameChange">确定</el-button>
+        <el-button type="primary" @click="submitUsernameChange()">确定</el-button>
       </span>
     </template>
   </el-dialog>>
@@ -245,22 +245,6 @@ export default {
         callback();
       }
     },
-    changeUsername(){
-       // this.$axios.get("/user/changeUsername",{
-       //   params:{
-       //    id: this.user.id,
-       //    name: null
-       //   }
-       // }).then(res => {
-       //   if(res.data.code === 200){
-       //      this.$message.success('用户名修改成功');
-       //
-       //    }else{
-       //      this.$message.error('用户名修改失败');
-       //    }
-       // })
-
-    },
     submitPasswordChange() {
       this.$refs.passwordFormRef.validate(valid => {
         if (valid) {
@@ -295,7 +279,7 @@ export default {
         }
       });
     },
-     submitUsernameChange() {
+  submitUsernameChange() {
       this.$refs.usernameFormRef.validate(valid => {
         if (valid) {
           // 提交修改用户名的逻辑
