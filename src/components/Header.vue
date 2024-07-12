@@ -158,7 +158,7 @@
           </div>
           <div class="meau-right">
               <el-button type="danger" @click="upload" v-if="isNotAdmin() && isLogin">
-                <el-icon>
+                <el-icon @click="upload">
                   <UploadFilled />
                 </el-icon>投稿
               </el-button>
@@ -289,6 +289,15 @@ export default {
 
   },
   methods:{
+    upload(){
+      const user = localStorage.getItem("user")
+      if(user){
+        this.$router.push('/upPersonal/addVideo')
+      }else{
+        this.$message.error("请先登录")
+        this.dialogVisible = true
+      }
+    },
     // 跳转页面
     toPage(path){
       const user = JSON.parse(window.localStorage.getItem("user"))
@@ -488,13 +497,17 @@ export default {
 .meau-right{
   display: flex; /* 启用 Flexbox */
   white-space: nowrap; /* 防止内容换行 */
-  //overflow: hidden; /* 隐藏溢出内容 */
+  /* //overflow: hidden; 隐藏溢出内容 */
   text-overflow: ellipsis; /* 当内容溢出时显示省略号 */
   flex-direction:column;
   align-items: center;
   font-size: 13px;
+  cursor: pointer;
+  transition-duration: 0.3s;
 }
-
+.meau-right:hover{
+  scale: 1.2;
+}
 /* 头像变化*/
 .avatar{
   position: absolute;
@@ -502,6 +515,7 @@ export default {
   display: flex;
   justify-content: center;
   z-index: 999;
+  cursor: pointer;
 }
 /* .user-rank{
   //display: flex;

@@ -51,7 +51,7 @@ export default {
   border-radius: 15px;
 }
 .play-icon {
-  width: 240px;
+  width: 280px;
   height: 140px;
   position: absolute;
   top: 10px;
