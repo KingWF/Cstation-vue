@@ -35,6 +35,6 @@ app.use(router)
 
 // 配置为全局属性
 app.config.globalProperties.$axios = axios
-
+app.provide('$axios', axios)
 // 显示项目主页面
 app.mount('#app')

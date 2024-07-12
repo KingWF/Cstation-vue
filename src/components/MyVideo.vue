@@ -278,6 +278,7 @@ export default {
       this.ws.onclose = this.close
       this.ws.onerror = this.error
       this.ws.onmessage = this.getMessage
+      this.$emit('WsConnect',this.ws)
     },
     open(){
       window.onunload=function(){
@@ -297,6 +298,11 @@ export default {
     getMessage(msg) {
       let message=null
       console.log("接收到的实时弹幕",msg.data)
+      let part = msg.data.split('|');
+      if(part[0] === 'ChatRoom'){
+        this.$emit('RoomMessage',part[1])
+        return;
+      }
       if (typeof msg.data ==='string'){
         message = JSON.parse(msg.data)
       }

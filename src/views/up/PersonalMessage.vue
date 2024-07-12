@@ -24,19 +24,19 @@
         <h2>社交信息</h2>
         <div class="stat-item">
           <span class="stat-count">{{ userSocialInfo[0] }}</span>
-          <span class="stat-label">关注</span>
+          <a  class="dynamic-button">关注</a>
         </div>
         <div class="stat-item">
           <span class="stat-count">{{ userSocialInfo[1] }}</span>
-          <span class="stat-label">收藏</span>
+          <a href="PersonalCollect" class="dynamic-button">收藏</a>
         </div>
         <div class="stat-item">
           <span class="stat-count">{{ userSocialInfo[2] }}</span>
-          <span class="stat-label">粉丝</span>
+          <a href="PersonalFun" class="dynamic-button">粉丝</a>
         </div>
         <div class="stat-item">
           <span class="stat-count">{{ userSocialInfo[3] }}</span>
-          <span class="stat-label">视频</span>
+          <a href="VideoManage" class="dynamic-button">个人视频</a>
         </div>
       </section>
       <section class="details-section">
@@ -245,6 +245,22 @@ export default {
         callback();
       }
     },
+    changeUsername(){
+       // this.$axios.get("/user/changeUsername",{
+       //   params:{
+       //    id: this.user.id,
+       //    name: null
+       //   }
+       // }).then(res => {
+       //   if(res.data.code === 200){
+       //      this.$message.success('用户名修改成功');
+       //
+       //    }else{
+       //      this.$message.error('用户名修改失败');
+       //    }
+       // })
+
+    },
     submitPasswordChange() {
       this.$refs.passwordFormRef.validate(valid => {
         if (valid) {
@@ -394,5 +410,23 @@ export default {
 
 .stat-label {
   color: #666;
+}
+</style>
+<style scoped>.dynamic-button {
+  background-color: #ADD8E6; /* 蓝色 */
+  border: none;
+  color: white;
+  padding: 8px 18px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+  transition: transform 0.3s ease; /* 添加过渡效果 */
+}
+
+.dynamic-button:hover {
+  transform: scale(1.1); /* 鼠标悬停时放大1.1倍 */
 }
 </style>
