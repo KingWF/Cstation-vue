@@ -105,8 +105,9 @@ const sendMsg = () => {
     <el-row>
       <el-col :span="24">
         <div class="chat-room-input">
-          <el-input @keyup.enter.native="sendMsg"  v-model="inputMsg" placeholder="请输入消息"></el-input>
-          <el-button type="primary"  @click="sendMsg">发送</el-button>
+          <el-input style="width: 60%;" @keyup.enter.native="sendMsg"  v-model="inputMsg" placeholder="请输入消息"></el-input>
+          <el-icon  style="margin-left: 10px;" size="30"><Plus /></el-icon>
+          <el-button style="margin-left: 10px;" type="primary"  @click="sendMsg">发送</el-button>
         </div>
       </el-col>
     </el-row>
