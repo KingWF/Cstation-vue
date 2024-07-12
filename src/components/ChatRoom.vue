@@ -1,7 +1,8 @@
 <script setup>
 import { ref, defineProps, inject, onMounted, watchEffect } from "vue";
 import ChatItem from "./ChatItem.vue";
-
+import EmojiSelect from "./EmojiSelect.vue";
+import { ElMessage } from "element-plus";
 const props = defineProps({
   vid: String,
   ChatList: Array,
@@ -64,6 +65,10 @@ watchEffect(() => {
 const inputMsg = ref("");
 
 const sendMsg = () => {
+  if(inputMsg.value.trim() === ""){
+    ElMessage.error("消息不能为空");
+    return;
+  }
   const message = {
     content: inputMsg.value,
     uid: userInfo.value.id,
@@ -73,6 +78,9 @@ const sendMsg = () => {
   inputMsg.value = "";
 };
 
+const selectEmoji = (emoji) => {
+  inputMsg.value += emoji;
+} 
 </script>
 
 <template>
@@ -101,8 +109,21 @@ const sendMsg = () => {
     <el-row>
       <el-col :span="24">
         <div class="chat-room-input">
-          <el-input v-model="inputMsg" placeholder="请输入消息"></el-input>
-          <el-button type="primary" @click="sendMsg">发送</el-button>
+          <el-input style="width: 60%;" @keyup.enter.native="sendMsg"  v-model="inputMsg" placeholder="请输入消息"></el-input>
+          <el-popover
+            placement="top"
+            :width="540"
+            trigger="click"
+          >
+            <template #reference>
+              <el-icon class="emoji-icon" style="margin-left: 10px;" size="30"><Plus /></el-icon>
+            </template>
+          <emoji-select @select="selectEmoji"></emoji-select>
+
+          </el-popover>
+          
+
+          <el-button style="margin-left: 10px;" type="primary"  @click="sendMsg">发送</el-button>
         </div>
       </el-col>
     </el-row>
@@ -122,5 +143,13 @@ const sendMsg = () => {
 .list-leave-to {
   opacity: 0;
   transform: translateX(-30px);
+}
+.emoji-icon{
+  cursor: pointer;
+  color: #909399;
+}
+.emoji-icon:hover{
+  scale: 1.2;
+  color: skyblue;
 }
 </style>

@@ -6,9 +6,12 @@
     <el-row class="play-icon">
       <img src="@/assets/play.png" class="rec-list-play" @click="play(video.id)">
     </el-row>
-    <p class="title">{{video.title}}</p>
+    <p class="title">
+        {{ video.title }}
+        <span class="play-count">播放量:{{ video.playnums }}</span>
+    </p>
     <p style="position: relative;top: -30px;">
-      <span style="color: red;">{{video.uid}}</span>&nbsp;&nbsp;
+      <span style="color: red;">{{video.username}}</span>&nbsp;&nbsp;
       <span style="font-size: 12px;">{{video.uptime}}</span>
     </p>
   </div>
@@ -68,5 +71,12 @@ export default {
   overflow: hidden; /* 隐藏溢出的内容 */
   text-overflow: ellipsis; /* 使用省略号表示溢出的内容 */
   display: inline-block; /* 将 p 标签设置为行内块元素，确保宽度生效 */
+}
+.play-count {
+  color: grey;
+  font-size: 12px;
+  height: 0px;
+  position: absolute;
+  right: 80px;
 }
 </style>
