@@ -94,6 +94,11 @@ const router = createRouter({
           name: 'myMessage',
           component: () => import('../views/up/MyMessage.vue')
         },
+        {
+          path:'personalMessage',
+          name:'personalMessage',
+          component:()=>import('@/views/up/PersonalMessage.vue')
+        }
 
       ]  
     },

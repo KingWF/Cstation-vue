@@ -1,8 +1,13 @@
 <template>
   <div >
     <el-table :data="tableData" style="width: 100%">
-      <el-table-column label="Date" prop="date" width="200px"/>
-      <el-table-column label="Name" prop="name" width="200px"/>
+      <el-table-column label="评论时间" prop="time" width="200px"/>
+      <el-table-column label="评论者" prop="account" width="200px"/>
+      <el-table-column label="评论内容" prop="content" width="200px">
+      <template #default="scope">
+        <span v-html="scope.row.content"></span>
+      </template>
+      </el-table-column>
       <el-table-column align="right" width="600px">
         <template #header>
           <div style="background: #409eff;display: flex;justify-content: space-around">
@@ -23,22 +28,19 @@
               </el-select>
             </div>
             <div >
-              <el-input style="width: 130px" v-model="search" size="small" placeholder="Type to search" />
+              <el-input style="width: 130px" v-model="search" size="small" placeholder="Type to search" @keyup.enter="searchTable"/>
             </div>
           </div>
 
 
         </template>
         <template #default="scope">
-          <el-button size="small" @click="handleEdit(scope.$index, scope.row)">
-            Edit
-          </el-button>
           <el-button
               size="small"
               type="danger"
-              @click="handleDelete(scope.$index, scope.row)"
+              @click="handleDelete(scope.row)"
           >
-            Delete
+            删除
           </el-button>
         </template>
       </el-table-column>
@@ -54,7 +56,6 @@ export default {
       tableData: [],
       search: '',
       handleEdit: '',
-      handleDelete: '',
       selectVid:0
     }
   },
@@ -71,11 +72,41 @@ export default {
     })
   },
   methods: {
+    searchTable() {
+      console.log('触发搜索',this.search)
+        let filteredData = this.tableData.filter(data =>
+            !this.search ||
+            data.title.toLowerCase().includes(this.search.toLowerCase())
+        );
+        this.$set(this, 'tableData', filteredData);
+    },
     handleChange(){
       console.log("选择的视频",this.selectVid)
       this.$axios.get("review/findReviewByVid/"+this.selectVid).then(res => {
         console.log('表格数据',res.data.data)
         this.tableData = res.data.data
+      })
+    },
+    handleDelete(index){
+      console.log(index.id)
+      this.$axios.get("review/delReview/"+index.id).then(res => {
+        console.log(res.data)
+        if(res.data.code == 200 && res.data.data == true) {
+          this.$axios.get("review/findReviewByVid/"+this.selectVid).then(res => {
+            console.log('表格数据',res.data.data)
+            this.tableData = res.data.data
+            this.$message({
+              type: 'success',
+              message: '删除成功'
+            });
+          })
+
+        }else{
+          this.$message({
+            type: 'error',
+            message: '删除失败'
+          });
+        }
       })
     }
   }
