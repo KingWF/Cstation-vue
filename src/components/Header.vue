@@ -126,7 +126,7 @@
               </el-row>
               <el-divider />
 <!--              退出登录-->
-              <el-row style="margin:15px 0 15px 0" @click="toPage('/upPersonal')">
+              <el-row style="margin:15px 0 15px 0" @click="logout">
                 <el-col :span="4"><el-icon size="25"><Remove /></el-icon></el-col>
                 <el-col :span="18" style="font-size: 18px">退出登录</el-col>
                 <el-col :span="2"><el-icon size="20"><ArrowRight /></el-icon></el-col>
