@@ -12,11 +12,11 @@
                 </el-col>
                 <el-col :span="14">
                   用户昵称:<h3 class="name">{{ fan.account }}</h3>
+                  <el-button type="danger" style="margin-left: 150px;" color="#ADD8E6">关注</el-button>
+                  <el-button type="danger" style="margin-left: 150px;" >拉黑</el-button>
                 </el-col>
               </el-row>
-
             </el-card>
-
           </el-col>
     </el-row>
 
