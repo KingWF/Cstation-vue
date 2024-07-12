@@ -135,20 +135,19 @@ import {ElMessageBox, genFileId} from "element-plus";
 export default {
   data() {
     return {
-      isRegister:false,
+      isRegister: false,
       user: {
         account: '',
-        avatar:'',
-        id:0,
-        level:'',
-        password:'',
+        avatar: '',
+        id: 0,
+        level: '',
+        password: '',
 
       },
-      userSocialInfo:{
-      },
+      userSocialInfo: {},
       showMask: false,
-      isShowDrawer:false,
-      password:'',
+      isShowDrawer: false,
+      password: '',
       showChangePasswordDialog: false,
       passwordForm: {
         oldPassword: '',
@@ -156,11 +155,11 @@ export default {
         confirmPassword: '',
       },
       passwordRules: {
-        oldPassword: [{ required: true, message: '请输入原密码', trigger: 'blur' }],
-        newPassword: [{ required: true, message: '请输入新密码', trigger: 'blur' }],
+        oldPassword: [{required: true, message: '请输入原密码', trigger: 'blur'}],
+        newPassword: [{required: true, message: '请输入新密码', trigger: 'blur'}],
         confirmPassword: [
-          { required: true, message: '请再次输入新密码', trigger: 'blur' },
-          { validator: this.validatePasswordMatch, trigger: 'blur' },
+          {required: true, message: '请再次输入新密码', trigger: 'blur'},
+          {validator: this.validatePasswordMatch, trigger: 'blur'},
         ],
       },
       showChangeUsernameDialog: false,
@@ -169,44 +168,43 @@ export default {
       },
       usernameRules: {
         newUsername: [
-          { required: true, message: '请输入新用户名', trigger: 'blur' },
-          { pattern: /^[a-zA-Z0-9_]{4,16}$/, message: '用户名必须是4到16位的字母、数字或下划线', trigger: 'blur' },
+          {required: true, message: '请输入新用户名', trigger: 'blur'},
+          {pattern: /^[a-zA-Z0-9_]{4,16}$/, message: '用户名必须是4到16位的字母、数字或下划线', trigger: 'blur'},
         ],
       },
     }
   },
-  computed:{
+  computed: {
     UserFilled() {
       return UserFilled
     },
     Edit() {
       return Edit
     },
-     beSecret(){
+    beSecret() {
       return "******"
     }
   },
   mounted() {
 
-  //   获取用户信息
+    //   获取用户信息
     this.$axios.get("user/getUserInfo").then(res => {
-      console.log('查询的用户信息',res.data.data)
+      console.log('查询的用户信息', res.data.data)
       this.user = res.data.data
       this.password = res.data.data.password
     })
-  //   获取用户社交信息
+    //   获取用户社交信息
     this.$axios.get("user/getUserSocialInfo").then(res => {
       console.log(res.data.data)
       this.userSocialInfo = res.data.data
     })
-  //   判断是否注册人脸
+    //   判断是否注册人脸
     this.$axios.get("faceIdentify/isRegisterFace").then(res => {
-      console.log('是否注册人脸',res.data)
-      if(res.data){
-        this.isRegister=true
-      }
-      else {
-        this.isRegister=false
+      console.log('是否注册人脸', res.data)
+      if (res.data) {
+        this.isRegister = true
+      } else {
+        this.isRegister = false
       }
     })
   },
@@ -221,67 +219,67 @@ export default {
     submitUpload() {
       this.$refs.upload.submit();
     },
-    successUpload(response, file, fileList){
+    successUpload(response, file, fileList) {
       // 上传文件并接收返回的响应参数
-        console.log('上传成功', response)
-        if (response.code === 200) {
-          this.$message.success('上传成功')
-          this.isShowDrawer = false
-          this.user.avatar=response.data
+      console.log('上传成功', response)
+      if (response.code === 200) {
+        this.$message.success('上传成功')
+        this.isShowDrawer = false
+        this.user.avatar = response.data
         //   重新查询用户信息并赋值给浏览器缓存
-          this.$axios.get("user/getUserInfo").then(res => {
-            window.localStorage.setItem("user", JSON.stringify(res.data.data))
-          })
-        }
+        this.$axios.get("user/getUserInfo").then(res => {
+          window.localStorage.setItem("user", JSON.stringify(res.data.data))
+        })
+      }
     },
     cancelClick() {
       this.isShowDrawer = false
-    }
-  },
-    validatePasswordMatch(rule, value, callback){
+    },
+    validatePasswordMatch(rule, value, callback) {
       if (value !== this.passwordForm.newPassword) {
         callback(new Error('两次输入的密码不一致'));
       } else {
         callback();
       }
     },
-    changeUsername(){
-       // this.$axios.get("/user/changeUsername",{
-       //   params:{
-       //    id: this.user.id,
-       //    name: null
-       //   }
-       // }).then(res => {
-       //   if(res.data.code === 200){
-       //      this.$message.success('用户名修改成功');
-       //
-       //    }else{
-       //      this.$message.error('用户名修改失败');
-       //    }
-       // })
+    //changeUsername(){
+    // this.$axios.get("/user/changeUsername",{
+    //   params:{
+    //    id: this.user.id,
+    //    name: null
+    //   }
+    // }).then(res => {
+    //   if(res.data.code === 200){
+    //      this.$message.success('用户名修改成功');
+    //
+    //    }else{
+    //      this.$message.error('用户名修改失败');
+    //    }
+    // })
 
-    },
+    //},
     submitPasswordChange() {
       this.$refs.passwordFormRef.validate(valid => {
         if (valid) {
           // 提交修改密码的逻辑
-          this.$axios.get("/user/changePassword",{params:{
-            oldPassword: this.passwordForm.oldPassword,
-            newPassword: this.passwordForm.newPassword,
+          this.$axios.get("/user/changePassword", {
+            params: {
+              oldPassword: this.passwordForm.oldPassword,
+              newPassword: this.passwordForm.newPassword,
             }
           })
-          .then(res => {
-            if(res.data.code === 200){
-              this.$message.success('密码修改成功');
-            }else if (res.data.code===501){
-              this.$message.error('原密码错误');
-            }else{
-              this.$message.error('密码修改失败');
-            }
-          })
-          .catch(error => {
-            console.error('密码修改失败', error);
-          })
+              .then(res => {
+                if (res.data.code === 200) {
+                  this.$message.success('密码修改成功');
+                } else if (res.data.code === 501) {
+                  this.$message.error('原密码错误');
+                } else {
+                  this.$message.error('密码修改失败');
+                }
+              })
+              .catch(error => {
+                console.error('密码修改失败', error);
+              })
           this.showChangePasswordDialog = false;
           this.passwordForm = {
             oldPassword: '',
@@ -295,14 +293,14 @@ export default {
         }
       });
     },
-  submitUsernameChange() {
+    submitUsernameChange() {
       this.$refs.usernameFormRef.validate(valid => {
         if (valid) {
           // 提交修改用户名的逻辑
           this.$axios.get('/user/changeName', {
-            params:{
+            params: {
               id: this.user.id,
-            username: this.usernameForm.newUsername,
+              username: this.usernameForm.newUsername,
             }
           }).then(response => {
             if (response.data.code === 200) {
@@ -325,6 +323,7 @@ export default {
         }
       });
     },
+  }
 }
 </script>
 <style scoped>

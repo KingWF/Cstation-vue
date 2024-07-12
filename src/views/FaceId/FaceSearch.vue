@@ -2,9 +2,9 @@
   <div class="baseMainDown">
     <el-image src="/src/assets/static/015c145da813afa801209e1fbc0a3a.png@2o.png" :style="imageStyle" />
   </div>
-  <div class="baseMainOver">
-    <div class="base">
-      <div class="camera" v-if="isShow">
+  <div class="baseMainOver" >
+    <div class="base" v-if="isShow">
+      <div class="camera">
         <video id="videoCamera" autoplay style="height:379px;width:450px;border-radius: 50%"></video>
         <div >
           <canvas
@@ -16,10 +16,10 @@
           ></canvas>
         </div>
       </div>
+    </div>
       <div class="face-img" v-else>
         <img :src="imgSrc" alt="" />
       </div>
-    </div>
   </div>
   <div class="baseBtn">
     <el-button @click="handlePhotograph" v-if="isShow">拍照</el-button>
@@ -70,6 +70,7 @@ export default {
     // 获取页面高度
     this.updateWindowDimensions();
     window.addEventListener('resize', this.updateWindowDimensions);
+    // 获取摄像头列表
     this.getDevices().then(res => {
       if (res.length) {
         this.cameraList = res;
@@ -99,7 +100,11 @@ export default {
           // 更新浏览器缓存的用户信息
           window.localStorage.setItem("user", JSON.stringify(user))
           window.localStorage.setItem("token", token)
+          // // 关闭摄像机
+          // this.disableCamera()
+          // location.reload()
           this.$router.push("/")
+
         }
       })
     },
@@ -108,6 +113,16 @@ export default {
       this.thisContext = this.thisCanvas.getContext("2d");
       this.thisVideo = document.getElementById("videoCamera");
       this.enableCamera(this.currentCamera);
+    },
+    disableCamera() {
+      const stream = this.thisVideo.srcObject;
+      if (stream) {
+        const tracks = stream.getTracks();
+        tracks.forEach(track => {
+          track.stop();
+        });
+        this.thisVideo.srcObject = null;
+      }
     },
     getDevices() {
       return new Promise((resolve, reject) => {
@@ -215,8 +230,8 @@ export default {
               }
             })
           }
-          console.log('识别结果uid',res.data.result.user_list[0].user_id)
-          console.log('识别分数',res.data.result.user_list[0].score)
+          console.log('识别结果uid',res.data.result.userList[0].userId)
+          console.log('识别分数',res.data.result.userList[0].score)
         }else{
          ElMessage.error(res.data.message)
         }
@@ -224,6 +239,7 @@ export default {
 
     },
     restartPhoto(){
+      location.reload()
       this.isShow=true
       this.isShowImg=false
       this.imgSrc=''

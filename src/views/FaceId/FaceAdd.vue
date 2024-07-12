@@ -190,29 +190,29 @@ export default {
 
       this.$axios.post("faceIdentify/addFace", {image:this.imgSrc.replace(/^data:image\/\w+;base64,/, ''),user_id:user.id,user_info:'新增人脸'
       }).then(res => {
-        console.log('addResult',res.data)
-        if(res.data.message=='true'){
-          if(res.data.data.errorCode==0){
+        if(res.data.code===200){
+          ElMessage.success(res.data.message)
             // 更改数据库人脸状态
             this.$axios.get("faceIdentify/changeFaceStatus", ).then(res => {
               // 人脸状态更新成功
-              if(res.data){
-                this.ifShowAlert=true
+              if(res.data) {
+                this.ifShowAlert = true
                 setTimeout(() => {
-                  this.ifShowAlert=false
+                  this.ifShowAlert = false
+                  // // 关闭摄像机
+                  // this.disableCamera()
+                  // location.reload()
                   this.$router.push('/upPersonal/personalMessage')
-                },2000)
+                }, 2000)
               }
             })
-          }else{
-            ElMessage.error('人脸录入失败!')
-          }
         }else{
-         ElMessage.warning('该人脸已绑定账号，请使用该人脸进行登录！')
+         ElMessage.warning(res.data.message)
         }
       })
     },
     restartPhoto(){
+      location.reload()
       this.isShow=true
       this.isShowImg=false
       this.imgSrc=''
