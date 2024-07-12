@@ -58,7 +58,7 @@ export default{
   },
   mounted(){
     // 发请求将最新的视频查询出来：审核通过的视频
-    this.$axios.get("video/findNew").then(res => {
+    this.$axios.get("video/findRecommend").then(res => {
       console.log(res.data)
       this.videoList = res.data.data
     })

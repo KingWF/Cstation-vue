@@ -1,45 +1,45 @@
 <template>
- <div >
-      <!-- 搜索、添加 -->
-      <el-row>
-        <el-col :span="4">
-          <el-input placeholder="用户姓名" style="width: 200px;" v-model="name"></el-input>
-        </el-col>
-        <el-col :span="4">
-          <el-select
-            v-model="state"
-            placeholder="请选择用户状态"
-            style="width: 200px"
-            @change="changeState"
-          >
-            <el-option
-              v-for="item in stateList"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
-            />
-          </el-select>
-        </el-col>
-        <el-row :span="4">
-          <el-select
-              v-model="level"
-              placeholder="请选择用户等级"
-              style="width: 200px"
-              @change="changeState"
-            >
-              <el-option
-                v-for="item in levelList"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              />
-            </el-select>
-          </el-row>
-        <el-row :span="4">
-          <el-button type="success" @click="getData">搜索</el-button>
-        </el-row>
-      </el-row>
-
+ <div>
+   <div class="search-bar">
+   <!-- 搜索、添加 -->
+    <el-row :gutter="20" class="search-row">
+      <el-col :span="4">
+        <el-input placeholder="输入用户姓名" style="width: 100%;" v-model="name"></el-input>
+      </el-col>
+      <el-col :span="4">
+        <el-select
+          v-model="state"
+          placeholder="选择用户状态"        style="width: 100%;"
+          @change="changeState"
+        >
+          <el-option
+            v-for="item in stateList"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          />
+        </el-select>
+      </el-col>
+      <el-col :span="4">
+        <el-select
+          v-model="level"
+          placeholder="选择用户等级"        style="width: 100%;"
+          @change="changeState"
+        >
+          <el-option
+            v-for="item in levelList"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          />
+        </el-select>
+      </el-col>
+      <el-col :span="4">
+        <el-button type="success" @click="getData" :icon="Search" >搜索</el-button>
+        <el-button type="primary" @click="refresh" ><el-icon><RefreshRight /></el-icon>重置</el-button>
+      </el-col>
+    </el-row>
+</div>
       <!-- 表格 -->
       <el-row>
         <el-table :data="userList" style="width: 100%">
@@ -62,9 +62,9 @@
           </el-table-column>
 
           <el-table-column label="操作" align="center" #default="scoped">
-            <el-button type="danger" v-if="scoped.row.state === 'user_normal'" @click="lock(scoped)">锁定</el-button>
-            <el-button type="success" v-if="scoped.row.state !== 'user_normal'" @click="pass(scoped)">解锁</el-button>
-            <el-button type="success" @click="changeState(scoped)" >修改</el-button>
+            <el-button type="danger" v-if="scoped.row.state === 'user_normal'" @click="lock(scoped)" ><el-icon><Lock /></el-icon>锁定</el-button>
+            <el-button type="success" v-if="scoped.row.state !== 'user_normal'" @click="pass(scoped)" ><el-icon><Unlock /></el-icon>解锁</el-button>
+            <el-button type="success" @click="changeState(scoped)" :icon="Edit">修改</el-button>
           </el-table-column>
         </el-table>
       </el-row>
@@ -100,7 +100,17 @@
 </template>
 
 <script >
+import {Edit, Search} from "@element-plus/icons-vue";
+
   export default{
+    computed: {
+      Edit() {
+        return Edit
+      },
+      Search() {
+        return Search
+      }
+    },
     data(){
       return{
         currentPage: 1, // 页面
@@ -248,10 +258,48 @@
         this.form.level='';
       })
     },
+    refresh(){
+        this.name = undefined
+        this.state = undefined
+        this.level = undefined
+    }
     }
   }
 </script>
 
-<style scoped>
+<style scoped>.search-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.search-row .el-input__inner,
+.search-row .el-select .el-input__inner {
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12), 0 0 6px rgba(0, 0, 0, 0.04);
+}
+
+.search-row .el-button {
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12), 0 0 6px rgba(0, 0, 0, 0.04);
+}
+
+/* 可选：如果希望所有元素都有相同的高度 */
+.search-row .el-input,
+.search-row .el-select,
+.search-row .el-button {
+  height: 40px;
+}
+.search-bar {
+  background-color: #fafafa; /* 背景颜色 */
+  padding: 20px; /* 内边距 */
+  border-radius: 15px; /* 圆角 */
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* 阴影 */
+  transition: box-shadow 0.3s ease; /* 阴影过渡 */
+}
+
+.search-bar:hover {
+  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15); /* 鼠标悬停时的阴影 */
+}
 
 </style>
