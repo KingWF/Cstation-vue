@@ -17,7 +17,7 @@
         <ul class="menu">
           <li><a href="/">首页</a></li>
           <li><a href="#">番剧</a></li>
-          <li><a href="#">直播</a></li>
+          <li><a href="/currentChatRoom">聊天室</a></li>
           <li><a href="#">游戏中心</a></li>
           <li><a href="#">会员购</a></li>
           <li><a href="#">漫画</a></li>
