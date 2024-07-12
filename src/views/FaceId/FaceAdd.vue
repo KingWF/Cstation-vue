@@ -192,14 +192,17 @@ export default {
       }).then(res => {
         console.log('addResult',res.data)
         if(res.data.message=='true'){
-          if(res.data.data.error_code==0){
+          if(res.data.data.errorCode==0){
             // 更改数据库人脸状态
             this.$axios.get("faceIdentify/changeFaceStatus", ).then(res => {
-              this.ifShowAlert=true
-              setTimeout(() => {
-                this.ifShowAlert=false
-                this.$router.push('/upPersonal/personalMessage')
-              },2000)
+              // 人脸状态更新成功
+              if(res.data){
+                this.ifShowAlert=true
+                setTimeout(() => {
+                  this.ifShowAlert=false
+                  this.$router.push('/upPersonal/personalMessage')
+                },2000)
+              }
             })
           }else{
             ElMessage.error('人脸录入失败!')

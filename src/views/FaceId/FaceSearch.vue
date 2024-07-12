@@ -199,8 +199,8 @@ export default {
       this.isShow= false;
 
       this.$axios.post("faceIdentify/searchFace", {image:this.imgSrc.replace(/^data:image\/\w+;base64,/, '')}).then(res => {
-          let user_id = res.data.result.user_list[0].user_id
-          let score = res.data.result.user_list[0].score
+          let user_id = res.data.data.result.userList[0].userId
+          let score = res.data.data.result.userList[0].score
           if(score > 80){
             this.$axios.get("user/getUserByFaceId/"+user_id).then(res => {
               console.log('根据人脸识别出来的用户账号',res.data)
