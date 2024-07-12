@@ -1,7 +1,7 @@
 <script setup>
 import { ref, defineProps, inject, onMounted, watchEffect } from "vue";
 import ChatItem from "./ChatItem.vue";
-
+import { ElMessage } from "element-plus";
 const props = defineProps({
   vid: String,
   ChatList: Array,
@@ -64,6 +64,10 @@ watchEffect(() => {
 const inputMsg = ref("");
 
 const sendMsg = () => {
+  if(inputMsg.value.trim() === ""){
+    ElMessage.error("消息不能为空");
+    return;
+  }
   const message = {
     content: inputMsg.value,
     uid: userInfo.value.id,
@@ -101,8 +105,8 @@ const sendMsg = () => {
     <el-row>
       <el-col :span="24">
         <div class="chat-room-input">
-          <el-input v-model="inputMsg" placeholder="请输入消息"></el-input>
-          <el-button type="primary" @click="sendMsg">发送</el-button>
+          <el-input @keyup.enter.native="sendMsg"  v-model="inputMsg" placeholder="请输入消息"></el-input>
+          <el-button type="primary"  @click="sendMsg">发送</el-button>
         </div>
       </el-col>
     </el-row>
