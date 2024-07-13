@@ -3,10 +3,6 @@
     <Header @loginSuccess="loginSuccess" ></Header>
     <div class="container">
       <div style="width: 100%;display: flex;flex-direction: column;padding: 20px;">
-        <!-- 2.菜单 -->
-        <div style="width: 100%;">
-          <Menus></Menus>
-        </div>
         <div style="width: 100%;margin: 10px">
           <ChatRoomShow></ChatRoomShow>
         </div>
