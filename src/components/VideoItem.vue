@@ -7,7 +7,7 @@
       <img src="@/assets/play.png" class="rec-list-play" @click="play(video.id)">
     </el-row>
     <p class="title">
-        {{ video.title }}
+        {{truncateTitle(video.title) }}
         <span class="play-count">播放量:{{ video.playnums }}</span>
     </p>
     <p style="position: relative;top: -30px;">
@@ -34,6 +34,10 @@ export default {
   methods:{
     play(id){
       this.$router.push("/play/" + id)   //   /play/n
+    },
+    truncateTitle(title) {
+      // 截断标题，如果超过30个字符则添加省略号
+      return title.length > 10 ? title.substring(0, 10) + '...' : title;
     }
   }
 }
