@@ -169,7 +169,7 @@ export default {
       usernameRules: {
         newUsername: [
           {required: true, message: '请输入新用户名', trigger: 'blur'},
-          {pattern: /^[a-zA-Z0-9_]{4,16}$/, message: '用户名必须是4到16位的字母、数字或下划线', trigger: 'blur'},
+          {min: 2, max: 16, message: '用户名要在2-16个字符之间', trigger: 'blur'},
         ],
       },
     }
