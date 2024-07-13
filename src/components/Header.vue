@@ -2,9 +2,11 @@
   <div class="image-container"  v-if="!hideLogo" @click="backHome">
     <div>
       <img :src="imgSrc" alt="Background Image" class="home-img">
+      <img style="position:absolute;top: 0;left: 26%;width: 950px;height: 250px" src="/src/assets/static/0002.png" alt=""></img>
       <div class="logo">
         <img src="@/assets/logo.png"
-             alt="">
+             alt=""
+        class="logo-img">
       </div>
     </div>
   </div>
@@ -22,7 +24,7 @@
           <li><a href="#">会员购</a></li>
           <li><a href="#">漫画</a></li>
           <li><a href="#">赛事</a></li>
-          <li><a href="https://cn.bing.com/sportsdetails?q=%E6%AC%A7%E6%B4%B2%E6%9D%AF&sport=Soccer&scenario=League&TimezoneId=China%20Standard%20Time&league=Soccer_InternationalEuroCup&intent=Generic&seasonyear=2024&segment=sports&isl2=true&">欧洲杯</a></li>
+          <li><a href="https://cbs.sports.cctv.com/match.html?id=14380215">欧洲杯</a></li>
           <li><a href="#">周年庆</a></li>
         </ul>
       </el-col>
@@ -235,7 +237,7 @@ export default {
       followNum:44,
       fansNum:41,
       dynamicNum:40,
-      imgSrc:'/src/assets/static/233dcdceae41a91bf1ec0268b48ad3dd8e6340ac.jpg@1256w_708h_!web-article-pic.jpg',
+      imgSrc:'/src/assets/static/1001.png',
       searchKey:'',
       userSocialInfo:[]
     }
@@ -433,7 +435,7 @@ export default {
 }
 .home-img{
   width: 100%;
-  height: 130px;
+  height: 180px;
 }
 .base{
   padding-top: 10px;
@@ -447,13 +449,11 @@ export default {
 .logo{
   margin-left: 20px;
   position: absolute;
-  //top: 90px;
   top: 45px;
-  img{
-    width: 300px;
-    height: 80px;
-  }
-  overflow: hidden;
+}
+.logo-img{
+  width: 300px;
+  height: 80px;
 }
 .menu {
   display: flex;

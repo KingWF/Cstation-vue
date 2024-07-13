@@ -33,22 +33,22 @@ export default{
         {
           id: 1001,
           title: "热门推荐1",
-          cover: "https://cdjava96.oss-cn-chengdu.aliyuncs.com/c1.png"
+          cover: "https://img.zcool.cn/community/019cae5aa879a7a801206d965175e6.jpg@2o.jpg"
         },
         {
           id: 1002,
           title: "热门推荐2",
-          cover: "https://cdjava96.oss-cn-chengdu.aliyuncs.com/c2.png",
+          cover: "https://ts1.cn.mm.bing.net/th/id/R-C.3c698ce1145888fad9a716796c9ba865?rik=osa%2fhmRJnv3%2b4w&riu=http%3a%2f%2fp3.qhimg.com%2ft01a528f25b0a3df4c9.jpg&ehk=aeYQknqnM3S84g3f%2fYsDHPIiVBxaRjbqkG4IQwpVflg%3d&risl=&pid=ImgRaw&r=0",
         },
         {
           id: 1003,
           title: "热门推荐3",
-          cover: "https://cdjava96.oss-cn-chengdu.aliyuncs.com/c3.png"
+          cover: "https://activity.hdslb.com/blackboard/static/20190408/b8f2b74d0482aed61472c7065dc1ed56/vrbg-min.jpg"
         },
         {
           id: 1004,
           title: "热门推荐4",
-          cover: "https://cdjava96.oss-cn-chengdu.aliyuncs.com/c4.png"
+          cover: "https://ts1.cn.mm.bing.net/th/id/R-C.0c7b4fc6da585eef26481aaf1f9b451c?rik=RZWbFtfmI5E6YA&riu=http%3a%2f%2fp2.qhmsg.com%2ft01e276f6dfc91ea30c.jpg&ehk=jZP7iYk5Fe7DGYkr0DIRMN6fNviwRvlXmb8PNax6cDs%3d&risl=&pid=ImgRaw&r=0"
         }
       ],
       // 视频数据

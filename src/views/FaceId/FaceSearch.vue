@@ -1,6 +1,6 @@
 <template>
   <div class="baseMainDown">
-    <el-image src="/src/assets/static/015c145da813afa801209e1fbc0a3a.png@2o.png" :style="imageStyle" />
+    <el-image src="/src/assets/static/png0001.png" :style="imageStyle" />
   </div>
   <div class="baseMainOver" >
     <div class="base" v-if="isShow">

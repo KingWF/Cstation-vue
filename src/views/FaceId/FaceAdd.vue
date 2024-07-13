@@ -61,7 +61,9 @@ export default {
       this.main();
     });
   },
-
+  beforeUnmount() {
+    this.disableCamera()
+  },
   methods: {
     // 登录账号并进入首页
     login(){
@@ -200,7 +202,7 @@ export default {
                 setTimeout(() => {
                   this.ifShowAlert = false
                   // // 关闭摄像机
-                  // this.disableCamera()
+                  this.disableCamera()
                   // location.reload()
                   this.$router.push('/upPersonal/personalMessage')
                 }, 2000)
