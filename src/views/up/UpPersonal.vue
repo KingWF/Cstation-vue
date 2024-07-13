@@ -58,8 +58,11 @@ export default {
       if (path.includes("viewVideo")) {
         this.menuActiveIndex = "1";
       }
-      if (path.includes("message")) {
+      if (path.includes("myMessage")) {
         this.menuActiveIndex = "2";
+      }
+      if(path.includes("personalCollect")){
+        this.menuActiveIndex = "3";
       }
       if(path.includes("personalFollow")){
         this.menuActiveIndex = "4";
@@ -71,6 +74,10 @@ export default {
         this.menuActiveIndex = "6";
       }
     },
+  },
+  activated() {
+    console.log('activated');
+    this.checkRoute()
   },
   mounted() {
     this.checkRoute();
