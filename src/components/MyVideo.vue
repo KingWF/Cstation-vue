@@ -2,15 +2,24 @@
   <el-row>
     <div id="xgPlayerWrap"></div>
   </el-row>
-  <el-row style="margin-top: 15px;">
-    <el-col :span="8">
-      <el-input placeholder="非实时弹幕内容"
-                v-model="damuContent"></el-input>
+<!--  <el-row style="margin-top: 15px;">-->
+<!--    <el-col :span="8">-->
+<!--      <el-input placeholder="非实时弹幕内容"-->
+<!--                v-model="damuContent"></el-input>-->
+<!--    </el-col>-->
+<!--    <el-col :span="1">-->
+<!--      <el-button color="#409eff"-->
+<!--                 plain-->
+<!--                 @click="sendDanmu" @keyup.enter="sendDanmu">发弹幕</el-button>-->
+<!--    </el-col>-->
+<!--  </el-row>-->
+  <el-row style="margin-top: 30px">
+    <el-col :span="2">
+      实时连接状态：
     </el-col>
-    <el-col :span="1">
-      <el-button color="#409eff"
-                 plain
-                 @click="sendDanmu" @keyup.enter="sendDanmu">发弹幕</el-button>
+    <el-col :span="4">
+      <img src="/src/assets/static/icons/在线1.png" v-if="isOnline" alt="0" class="online-img"/>
+      <img src="/src/assets/static/icons/在线.png" alt="1" v-else class="online-img"/>
     </el-col>
   </el-row>
   <el-row style="margin-top: 15px;">
@@ -23,6 +32,7 @@
                  plain
                  @click="send" @keyup.enter="send">发弹幕</el-button>
     </el-col>
+
   </el-row>
 </template>
 
@@ -54,6 +64,7 @@ export default {
       damuTimeContent:'',//实时弹幕内容
       id: 1000,  // 弹幕id，实际应该从后台生成
       playertime: 0, // 记录当前视频时间，方便发送弹幕
+      isOnline: false,
     }
   },
   props: {
@@ -230,6 +241,14 @@ export default {
     },
     // 发送实时弹幕
     send(){
+      if(!this.isOnline){
+        ElMessage({
+          showClose: true,
+          message: '请先登录！',
+          type: 'warning',
+        })
+        return;
+      }
       const a=this.damuTimeContent;
       console.log('实时弹幕',a)
       if (a.match(/^\s*$/)){
@@ -287,6 +306,7 @@ export default {
       window.onbeforeunload=function(){
         this.ws.close()
       };
+      this.isOnline=true;
     },
     exit(){
       this.ws.close();
@@ -351,5 +371,10 @@ export default {
 }
 #xgPlayerWrap video {
   width: 100%;
+}
+.online-img{
+  margin-left: 30px;
+  width: 50px;
+  height: 50px;
 }
 </style>

@@ -1,12 +1,20 @@
 <template>
   <div class="image-container"  v-if="!hideLogo" @click="backHome">
+<!--    <div>-->
+<!--      <img :src="imgSrc" alt="Background Image" class="home-img">-->
+<!--      <img style="position:absolute;top: 0;left: 26%;width: 950px;height: 250px" src="/src/assets/static/0002.png" alt=""></img>-->
+<!--      <div class="logo">-->
+<!--        <img src="@/assets/logo.png"-->
+<!--             alt=""-->
+<!--        class="logo-img">-->
+<!--      </div>-->
+<!--    </div>-->
     <div>
       <img :src="imgSrc" alt="Background Image" class="home-img">
-      <img style="position:absolute;top: 0;left: 26%;width: 950px;height: 250px" src="/src/assets/static/0002.png" alt=""></img>
       <div class="logo">
         <img src="@/assets/logo.png"
              alt=""
-        class="logo-img">
+             class="logo-img">
       </div>
     </div>
   </div>
@@ -237,7 +245,7 @@ export default {
       followNum:44,
       fansNum:41,
       dynamicNum:40,
-      imgSrc:'/src/assets/static/1001.png',
+      imgSrc:'/src/assets/static/233dcdceae41a91bf1ec0268b48ad3dd8e6340ac.jpg@1256w_708h_!web-article-pic.jpg',
       searchKey:'',
       userSocialInfo:[]
     }
