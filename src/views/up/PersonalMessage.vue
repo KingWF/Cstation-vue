@@ -24,19 +24,19 @@
         <h2>社交信息</h2>
         <div class="stat-item">
           <span class="stat-count">{{ userSocialInfo[0] }}</span>
-          <a  class="dynamic-button">关注</a>
+          <div >关注</div>
         </div>
         <div class="stat-item">
           <span class="stat-count">{{ userSocialInfo[1] }}</span>
-          <a href="PersonalCollect" class="dynamic-button">收藏</a>
+          <div >收藏</div>
         </div>
         <div class="stat-item">
           <span class="stat-count">{{ userSocialInfo[2] }}</span>
-          <a href="PersonalFun" class="dynamic-button">粉丝</a>
+          <div >粉丝</div>
         </div>
         <div class="stat-item">
           <span class="stat-count">{{ userSocialInfo[3] }}</span>
-          <a href="VideoManage" class="dynamic-button">个人视频</a>
+          <div  >个人视频</div>
         </div>
       </section>
       <section class="details-section">

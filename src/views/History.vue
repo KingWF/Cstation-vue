@@ -6,14 +6,17 @@
       :enableSearch="true"
     />
   </div>
-  <div style="margin-top: 100px;">
-    <el-row style="width: 100%;display: flex;justify-content: space-around" >
-      <el-col :span="6" style="display: flex;flex-direction: column;align-items: center;margin-left: 20px">
+  <div style="margin-top: 100px;width: 100%">
+    <el-row style="display: flex;">
+      <div  style="width:100%;display: flex;align-items: center;margin-left: 20px;justify-content: space-around">
         <div>
           <img src="/src/assets/static/icons/历史通话记录.png" style="width: 50px;height: 50px"/>
           <span style="font-size: 20px;margin-left: 10px">播放记录</span>
         </div>
-      </el-col>
+        <div @click="deleteAllRecord()">
+          <div><el-icon size="20" style="color:#ff0000;margin-right: 4px"><DeleteFilled /></el-icon>清空历史记录</div>
+        </div>
+      </div>
     </el-row>
     <el-row justify="center" style="margin-top: 20px">
       <el-col :span="24" style="display: flex;justify-content: center">
@@ -33,6 +36,7 @@
 
                   >
                     <template #extra>
+                      <el-button type="danger" @click="deleteOneRecord(record.id)">删除</el-button>
                       <el-button type="primary" @click="toPlay(record.video)">查看</el-button>
                     </template>
                     <el-descriptions-item width="100px">
@@ -91,6 +95,7 @@
 <script>
 import Header from "@/components/Header.vue";
 import {MoreFilled} from "@element-plus/icons-vue";
+import {ElMessage, ElMessageBox} from "element-plus";
 export default {
   data() {
     return {
@@ -100,57 +105,119 @@ export default {
       sortOrder: 'desc',
       searchKey:'',
       historyRecordTableDataList:[],
-      activities : []
+      // activities : [],
     };
   },
   computed: {
-    sortedRecords() {
-      return this.records.slice().sort((a, b) => {
-        if (this.sortOrder === 'asc') {
-          return a[this.sortKey] > b[this.sortKey] ? 1 : -1;
-        } else {
-          return a[this.sortKey] < b[this.sortKey] ? 1 : -1;
-        }
-      });
-    }
   },
   components:{
     Header
   },
   mounted() {
-    this.$axios.get('history/getHistoryRecord').then(res => {
-      console.log('获取的历史记录', res.data.data)
-
-      for (const record of res.data.data) {
-        console.log('记录数据',record)
-        // 构建表格数据格式
-        let historyRecordTableData = {
-          name:JSON.parse(window.localStorage.getItem("user")).account,
-          cover: record.video.cover,
-          title: record.video.title,
-          time: this.formatISOToCustom(record.tvideoPlayRecord.time),
-          playnums: record.tvideoPlayRecord.playnums,
-          uptime: record.video.uptime,
-          tvideoPlayRecord: record.tvideoPlayRecord,
-          video: record.video
-        }
-        this.historyRecordTableDataList.push(historyRecordTableData)
-      //   构建时间线格式
-        let activity = {
-          content: record.video.title,
-          timestamp: record.tvideoPlayRecord.time,
-          size: 'large',
-          type: 'primary',
-          video: record.video,
-          tvideoPlayRecord: record.tvideoPlayRecord,
-          time: this.formatISOToCustom(record.tvideoPlayRecord.time)
-        }
-        this.activities.push(activity)
-      }
-      console.log('结果',this.historyRecordTableDataList[0].video.cover)
-    })
+    this.getRecordsData()
   },
   methods: {
+    getRecordsData(){
+      this.$axios.get('history/getHistoryRecord').then(res => {
+        console.log('获取的历史记录', res.data.data)
+
+        for (const record of res.data.data) {
+          console.log('记录数据',record)
+          // 构建表格数据格式
+          let historyRecordTableData = {
+            id: record.tvideoPlayRecord.id,
+            name:JSON.parse(window.localStorage.getItem("user")).account,
+            cover: record.video.cover,
+            title: record.video.title,
+            time: this.formatISOToCustom(record.tvideoPlayRecord.time),
+            playnums: record.tvideoPlayRecord.playnums,
+            uptime: record.video.uptime,
+            tvideoPlayRecord: record.tvideoPlayRecord,
+            video: record.video
+          }
+          this.historyRecordTableDataList.push(historyRecordTableData)
+          // //   构建时间线格式
+          // let activity = {
+          //   content: record.video.title,
+          //   timestamp: record.tvideoPlayRecord.time,
+          //   size: 'large',
+          //   type: 'primary',
+          //   video: record.video,
+          //   tvideoPlayRecord: record.tvideoPlayRecord,
+          //   time: this.formatISOToCustom(record.tvideoPlayRecord.time)
+          // }
+          // this.activities.push(activity)
+        }
+      })
+    },
+    deleteAllRecord(){
+      ElMessageBox.confirm(
+          '确定删除所有的播放历史记录?',
+          '清空记录',
+          {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning',
+          }
+      )
+          .then(() => {
+            this.$axios.get('history/deleteAllHistoryRecord').then(res => {
+              if(res.data.code==200){
+                ElMessage({
+                  type: 'success',
+                  message: '删除成功',
+                })
+                this.historyRecordTableDataList=[]
+              }
+              else {
+                ElMessage({
+                  type: 'error',
+                  message: '删除失败',
+                })
+              }
+            })
+          })
+          .catch(() => {
+            ElMessage({
+              type: 'info',
+              message: '取消删除',
+            })
+          })
+    },
+    deleteOneRecord(id){
+      ElMessageBox.confirm(
+          '确定删除这条播放历史记录?',
+          '删除播放记录',
+          {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning',
+          }
+      )
+          .then(() => {
+            this.$axios.get('history/deleteHistoryRecord/'+id).then(res => {
+              if(res.data.code==200){
+                ElMessage({
+                  type: 'success',
+                  message: '删除成功',
+                })
+                this.historyRecordTableDataList = this.historyRecordTableDataList.filter(item => item.id !== id);
+              }else{
+                ElMessage({
+                  type: 'error',
+                  message: '删除失败',
+                })
+              }
+            })
+
+          })
+          .catch(() => {
+            ElMessage({
+              type: 'info',
+              message: '取消删除',
+            })
+          })
+    },
     toPlay(video) {
       this.$router.push({
         path: '/play/' + video.id
