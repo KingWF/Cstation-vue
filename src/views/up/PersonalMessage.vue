@@ -239,6 +239,7 @@ export default {
       if (value !== this.passwordForm.newPassword) {
         callback(new Error('两次输入的密码不一致'));
       } else {
+        //很好
         callback();
       }
     },

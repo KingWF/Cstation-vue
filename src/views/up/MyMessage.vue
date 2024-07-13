@@ -10,7 +10,7 @@
       </el-table-column>
       <el-table-column align="right" width="600px">
         <template #header>
-          <div style="background: #409eff;display: flex;justify-content: space-around">
+          <div style="display: flex;justify-content: space-around">
             <div style="">
               <el-select
                   v-model="selectVid"
