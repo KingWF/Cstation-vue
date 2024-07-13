@@ -5,7 +5,7 @@
   <div class="baseMainOver" >
     <div class="base" v-if="isShow">
       <div class="camera">
-        <video id="videoCamera" autoplay style="height:379px;width:450px;border-radius: 50%"></video>
+        <video id="videoCamera" :autoplay="autoplay" style="height:379px;width:450px;border-radius: 50%"></video>
         <div >
           <canvas
               style="display: none;border-radius: 50%"
@@ -21,27 +21,42 @@
         <img :src="imgSrc" alt="" />
       </div>
   </div>
-  <div class="baseBtn">
-    <el-button @click="handlePhotograph" v-if="isShow">拍照</el-button>
-    <el-button v-else @click="restartPhoto">重新拍照</el-button>
+  <div class="baseLoading" v-if="isShow">
+    <div style="color:#ffffff;font-size: 30px;font-weight: bolder">自动识别中...</div>
+  </div>
+  <div class="baseBtn" >
+    <div v-if="!ifShowLoading">
+<!--      <el-button @click="handlePhotograph" v-if="isShow">拍照</el-button>-->
+      <el-button v-if="!isShow" @click="restartPhoto">重新识别</el-button>
+    </div >
+    <div v-else style="width: 400px">
+      <el-progress :percentage="identifyProgress" :stroke-width="15" striped />
+    </div>
+
   </div>
   <div class="baseImg">
     <el-row style="display: flex;flex-direction: column;justify-content: center;align-items: center" v-if="isShowImg">
       <div style="margin-top: 30px;justify-content: center">
-        <el-image :src="SearchFaceUser.avatar" style="width: 280px;height: 280px;border-radius: 50%"></el-image>
+        <el-image :src="SearchFaceUser.avatar" style="width: 250px;height: 250px;border-radius: 50%"></el-image>
       </div>
-      <div  style="margin-top: 30px;justify-content: center ;background:#1e1f22;width: 300px;height: 30px">
-        <span style="color:#ffffff;">用户账号：</span><span style="color: #409eff">{{SearchFaceUser.account}}</span>
-      </div>
+
     </el-row>
   </div>
-  <div class="baseBtn2">
+  <div  style="position: absolute;justify-content: center ;background:#1e1f22;width: 300px;height: 30px;  top: 70%;
+  left: 62%;" v-if="isShowImg">
+    <span style="color:#ffffff;">用户账号：</span><span style="color: #409eff">{{SearchFaceUser.account}}</span>
+  </div>
+  <div class="baseBtn2" v-if="isShowImg">
     <el-button plain type="success" @click="login">确认登录</el-button>
   </div>
+  <div style="position: fixed;top: 20px;right: 0;width: 100%;height: 40px;background: #0eb63d;display: flex;justify-content: center;align-items: center" v-if="ifwaitTime">
+    <div style="color: #ffffff;font-weight: bolder">{{timeRemaining}}秒后将自动跳转登录!</div>
+  </div>
+
 </template>
 
 <script>
-import {ElMessage} from "element-plus";
+import {ElMessage, ElNotification} from "element-plus";
 
 export default {
   data() {
@@ -54,7 +69,15 @@ export default {
       currentCamera: "",
       imgSrc: "",
       SearchFaceUser:{},
-      isShowImg:false
+      isShowImg:false,
+      ifShowLoading: false,
+      identifyProgress:0,
+      autoplay: true,
+      recognitionInterval: null, // 用于存储 setInterval 的返回值
+      isRequesting: false, // 控制是否正在发送请求
+      timeRemaining: 5,
+      timerId: null,
+      ifwaitTime:false
     };
   },
 
@@ -78,11 +101,38 @@ export default {
       this.currentCamera = this.cameraList[0].id;
       this.main();
     });
+    // 组件挂载后开始识别
+    this.recognitionInterval = setInterval(this.startRecognition, 4000);
   },
   beforeDestroy() {
+    this.stopRecognition();
     window.removeEventListener('resize', this.updateWindowDimensions);
   },
   methods: {
+    startRecognition() {
+      if (!this.isRequesting) {
+        console.log('识别方法执行');
+        // 执行识别逻辑
+        this.recognitionLogic();
+      }
+    },
+    recognitionLogic() {
+      // 识别逻辑，可以是异步的
+      this.isRequesting = true;
+      this.handlePhotograph();
+    },
+    restartRecognition() {
+      // 清除现有定时器并重新开始
+      clearInterval(this.recognitionInterval);
+      this.recognitionInterval = setInterval(this.startRecognition, 4000);
+    },
+    stopRecognition() {
+      // 清除定时器
+      if (this.recognitionInterval !== null) {
+        clearInterval(this.recognitionInterval);
+        this.recognitionInterval = null;
+      }
+    },
     updateWindowDimensions() {
       this.windowHeight = window.innerHeight;
     },
@@ -103,6 +153,7 @@ export default {
           // // 关闭摄像机
           // this.disableCamera()
           // location.reload()
+          this.disableCamera()
           this.$router.push("/")
 
         }
@@ -205,28 +256,83 @@ export default {
           }
       );
     },
+    // 设置进度条时间延时器
+    setDelay(time) {
+      setTimeout(() => {
+        this.identifyProgress=time
+      },1000)
+
+    },
+    // 跳转倒计时
+    startCountdown() {
+      this.timerId = setInterval(() => {
+        this.timeRemaining--;
+        if (this.timeRemaining <= 0) {
+          clearInterval(this.timerId);
+        }
+      }, 1000);
+    },
     // 拍照
     handlePhotograph() {
+      // 显示识别加载
+      // 显示进度加载条
+      this.ifShowLoading = true;
+      this.setDelay(10)
       this.thisContext.drawImage(this.thisVideo, 0, 0, 300, 200);
       // 获取图片base64链接;
       this.imgSrc = this.thisCanvas.toDataURL("image/png", 0.7);
       // 将图片数据保存到localStorage
       window.localStorage.setItem('faceImage', this.imgSrc);
-
       this.isShow= false;
+      this.setDelay(30)
+      this.setDelay(50)
+      this.setDelay(70)
 
       this.$axios.post("faceIdentify/searchFace", {image:this.imgSrc.replace(/^data:image\/\w+;base64,/, '')}).then(res => {
+        // 设置进度为60
+        this.setDelay(90)
+
         if(res.data.code===200){
           let user_id = res.data.data.result.userList[0].userId
           let score = res.data.data.result.userList[0].score
           if(score > 80){
             this.$axios.get("user/getUserByFaceId/"+user_id).then(res => {
+                this.identifyProgress = 80;
               console.log('根据人脸识别出来的用户账号',res.data)
               if(res.data.code===200){
                 this.SearchFaceUser=res.data.data
-                this.isShowImg=true
+                this.setDelay(10)
+                setTimeout(() => {
+                  ElMessage.success(res.data.message)
+                  this.ifShowLoading=false
+                  this.isShowImg=true
+                },1000)
+                // 开启跳转倒计时
+                this.startCountdown()
+                this.ifwaitTime=true
+                // ElNotification({
+                //   title: '登录提醒',
+                //   type: 'success',
+                //   message: "五秒后将自动跳转登录!",
+                //   position: 'bottom-right',
+                //   duration:5000,
+                // })
+                setTimeout(()=>{
+                  this.ifwaitTime=false
+
+                  this.login()
+                  if (this.timerId) {
+                    clearInterval(this.timerId);
+                  }
+
+                },5000)
               }else{
-                alert('根据人脸识别出来的用户账号失败')
+                ElMessage.error(res.data.message)
+                this.ifShowLoading=false
+                this.isRequesting=false
+                setTimeout(() => {
+                  this.restartPhoto()
+                },2000)
               }
             })
           }
@@ -234,15 +340,20 @@ export default {
           console.log('识别分数',res.data.result.userList[0].score)
         }else{
          ElMessage.error(res.data.message)
+          this.ifShowLoading=false
+          this.isRequesting=false
+          setTimeout(() => {
+            this.restartPhoto()
+          },2000)
         }
         })
 
     },
     restartPhoto(){
       location.reload()
-      this.isShow=true
-      this.isShowImg=false
-      this.imgSrc=''
+      // this.isShow=true
+      // this.isShowImg=false
+      // this.imgSrc=''
     }
   }
 };
@@ -257,7 +368,20 @@ export default {
   left: 28.8%;
   transform: translate(-50%, -50%);
 }
-
+.baseLoading{
+  position: absolute;
+  top: 50%;
+  left: 28.8%;
+  transform: translate(-50%, -50%);
+  width: 200px;
+  height: 200px;
+  border-radius: 20%;
+  background: rgba(126, 126, 126, 0.6);
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 .base{
   display:flex;
   justify-content: center;
@@ -274,8 +398,8 @@ export default {
   //overflow: hidden;
 }
 .face-img{
-  height:400px;
-  width:400px;
+  height:300px;
+  width:300px;
 
   display:flex;
   justify-content: center;
@@ -299,7 +423,7 @@ export default {
 }
 .baseImg{
   position: absolute;
-  top: 48%;
+  top: 44%;
   left: 71.5%;
   transform: translate(-50%, -50%);
 }
