@@ -75,12 +75,18 @@ export default {
       }
     },
   },
+  watch: {
+    '$route': 'checkRoute'
+  },
   activated() {
     console.log('activated');
     this.checkRoute()
   },
   mounted() {
     this.checkRoute();
+  },
+  created() {
+    this.checkRoute(); // 初始加载时也调用一次
   },
   data(){
     return{

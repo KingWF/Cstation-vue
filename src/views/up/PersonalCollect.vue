@@ -5,12 +5,10 @@
     </el-row>
     <el-row>
       <el-col :span="24" style="margin: 10px 0 10px 0" v-for="(fan, index) in fans" :key="index" class="fan-item">
-        <el-card>
+        <el-card v-if="fan">
           <el-row justify="space-around">
             <el-col :span="10">
-              <a :href="fan.link" target="_blank">
-              <el-image :src="fan.cover" alt="Fan Avatar" class="avatar" />
-                </a>
+              <el-image :src="fan.cover" alt="Fan Avatar" class="avatar" @click="this.$router.push('/play/'+fan.id)"/>
             </el-col>
             <el-row :span="14">
               视频标题:<h3 class="name">{{ fan.title }}</h3>
@@ -38,7 +36,7 @@ export default {
   mounted() {
     // 发送请求获取粉丝数据
     this.$axios.get('collect/findCollect').then(res => {
-      console.log('粉丝数据获取成功', res.data.data)
+      console.log('收藏数据获取成功', res.data.data)
       this.fans = res.data.data;
     });
   },

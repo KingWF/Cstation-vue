@@ -24,19 +24,19 @@
         <h2>社交信息</h2>
         <div class="stat-item">
           <span class="stat-count">{{ userSocialInfo[0] }}</span>
-          <div @click="this.$router.push('/upPersonal/personalFollow')">关注</div>
+          <a  @click=" this.$router.push('/upPersonal/personalFollow')" class="dynamic-button" >关注</a>
         </div>
         <div class="stat-item">
           <span class="stat-count">{{ userSocialInfo[1] }}</span>
-          <div @click="this.$router.push('/upPersonal/personalCollect')">收藏</div>
+          <a @click=" this.$router.push('/upPersonal/personalCollect')" class="dynamic-button">收藏</a>
         </div>
         <div class="stat-item">
           <span class="stat-count">{{ userSocialInfo[2] }}</span>
-          <div @click="this.$router.push('/upPersonal/personalFun')">粉丝</div>
+          <a @click=" this.$router.push('/upPersonal/personalFun')" class="dynamic-button">粉丝</a>
         </div>
         <div class="stat-item">
           <span class="stat-count">{{ userSocialInfo[3] }}</span>
-          <div  >个人视频</div>
+          <a @click=" this.$router.push('/upPersonal/videoManage')" class="dynamic-button">个人视频</a>
         </div>
       </section>
       <section class="details-section">
