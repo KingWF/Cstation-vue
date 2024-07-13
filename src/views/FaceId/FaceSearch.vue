@@ -292,7 +292,7 @@ export default {
         // 设置进度为60
         this.setDelay(90)
 
-        if(res.data.code===200){
+        if(res.data.code==200){
           let user_id = res.data.data.result.userList[0].userId
           let score = res.data.data.result.userList[0].score
           if(score > 80){
@@ -336,8 +336,16 @@ export default {
               }
             })
           }
-          console.log('识别结果uid',res.data.result.userList[0].userId)
-          console.log('识别分数',res.data.result.userList[0].score)
+          // console.log('识别结果uid',res.data.result.userList[0].userId)
+          // console.log('识别分数',res.data.result.userList[0].score)
+          else {
+            ElMessage.error("未识别到人脸！")
+            this.ifShowLoading=false
+            this.isRequesting=false
+            setTimeout(() => {
+              this.restartPhoto()
+            },2000)
+          }
         }else{
          ElMessage.error(res.data.message)
           this.ifShowLoading=false

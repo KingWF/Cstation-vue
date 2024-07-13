@@ -24,15 +24,15 @@
         <h2>社交信息</h2>
         <div class="stat-item">
           <span class="stat-count">{{ userSocialInfo[0] }}</span>
-          <div >关注</div>
+          <div @click="this.$router.push('/upPersonal/personalFollow')">关注</div>
         </div>
         <div class="stat-item">
           <span class="stat-count">{{ userSocialInfo[1] }}</span>
-          <div >收藏</div>
+          <div @click="this.$router.push('/upPersonal/personalCollect')">收藏</div>
         </div>
         <div class="stat-item">
           <span class="stat-count">{{ userSocialInfo[2] }}</span>
-          <div >粉丝</div>
+          <div @click="this.$router.push('/upPersonal/personalFun')">粉丝</div>
         </div>
         <div class="stat-item">
           <span class="stat-count">{{ userSocialInfo[3] }}</span>
