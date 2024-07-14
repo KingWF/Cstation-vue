@@ -66,7 +66,7 @@
 export default{
   data(){
     return{
-      avatar:"https://cdjava96.oss-cn-chengdu.aliyuncs.com/avatar.png",
+      avatar:"/src/assets/static/1645588007800626.jpg",
       menuList:[
         ["番剧", "国创", "综艺", "动画", "鬼畜", "舞蹈", "娱乐", "科技", "美食", "汽车", "运动"],
         ["电影", "电视剧", "纪录片", "游戏", "音乐", "影视", "知识", "资讯", "生活", "时尚", "更多"]

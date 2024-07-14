@@ -1,7 +1,7 @@
 <template>
   <div v-loading="isLoading"
   element-loading-text="正在上传视频，请不要刷新页面..."
-  element-loading-background="rgba(122, 122, 122)"
+  element-loading-background="rgba(255,255,255)"
   >
     <el-row>
       <el-col :span="12">

@@ -1,10 +1,10 @@
 <template>
   <div>
     <el-container style="">
-      <el-header style="height: 140px;background-color:black;">
-        <Header></Header>
+      <el-header >
+        <Header :hideLogo="hideLogo" :topColor="topColor"  :enableSearch="enableSearch"></Header>
       </el-header>
-      <el-container style="">
+      <el-container style="margin-top: 30px">
         <el-aside width="200px" style="height: 600px;">
           <!-- 菜单 -->
           <el-scrollbar>
@@ -43,6 +43,13 @@
 import Header from '../../components/Header.vue'
 import { RouterLink, RouterView } from 'vue-router'
 export default{
+  data(){
+    return{
+      hideLogo: true,
+      topColor: '#0e6ec9',
+      enableSearch:false
+    }
+  },
   components:{
     Header
   }
