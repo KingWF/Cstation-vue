@@ -10,6 +10,15 @@ export default{
       ws: null
     }
   },
+  mounted(){
+    // 监听登录成功事件
+    const user = JSON.parse(window.localStorage.getItem("user"))
+    if(this.ws === null){
+      if(user){
+        this.loginSuccess();
+      }
+    }
+  },
   methods:{
     loginSuccess(){
       console.log("app 监听到登录成功")
