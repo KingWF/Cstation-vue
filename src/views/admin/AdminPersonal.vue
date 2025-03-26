@@ -24,9 +24,9 @@
               <el-menu-item index="5"  @click="$router.push('/adminPersonal/userManage')">
                 <el-icon><Setting/></el-icon>
                 用户管理</el-menu-item>
-              <el-menu-item index="6">
-                <el-icon><Setting/></el-icon>
-                个人信息</el-menu-item>
+<!--              <el-menu-item index="6" @click="$router.push('/adminPersonal/UserMessage')">-->
+<!--                <el-icon><Setting/></el-icon>-->
+<!--                个人信息</el-menu-item>-->
             </el-menu>
           </el-scrollbar>
 

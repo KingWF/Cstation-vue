@@ -21,10 +21,10 @@
               <el-menu-item index="4" @click="$router.push('/upPersonal/personalFollow')">
                 <el-icon><Connection /></el-icon>
                 我的关注</el-menu-item>
-              <el-menu-item index="5" @click="$router.push('/upPersonal/personalFun')">
+              <el-menu-item index="5" @click="console.log('Clicked'); $router.push('/upPersonal/personalFun')">
                 <el-icon><Avatar/></el-icon>
                 我的粉丝</el-menu-item>
-              <el-menu-item index="6" @click="$router.push('/upPersonal/personalMessage')">
+              <el-menu-item index="6" @click="console.log('Clicked'); $router.push('/upPersonal/personalMessage')">
                 <el-icon><Setting/></el-icon>
                 个人信息</el-menu-item>
             </el-menu>
@@ -41,8 +41,14 @@
 <script>
 import Header from "../../components/Header.vue";
 import { RouterLink, RouterView } from "vue-router";
+import {Avatar, Connection, Setting, Star, VideoCamera} from "@element-plus/icons-vue";
 export default {
   components: {
+    VideoCamera,
+    Star,
+    Connection,
+    Avatar,
+    Setting,
     Header,
   },
   methods: {
@@ -70,7 +76,7 @@ export default {
       if(path.includes("personalFun")){
         this.menuActiveIndex = "5";
       }
-      if (path.includes("personalMessage")) {
+      if(path.includes("personalMessage")) {
         this.menuActiveIndex = "6";
       }
     },
